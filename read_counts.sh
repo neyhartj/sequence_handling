@@ -4,7 +4,7 @@ set -e
 set -u
 set -o pipefail
 
-# input format for this list is simply fastq files, one per line
+# input format is simply a list of fastq files, one per line
 # could build list with find
 # fastq_1.gz
 # fastq_2.gz
@@ -35,6 +35,4 @@ for sample in ${sample_names[*]}
     		count="$(bioawk -cfastx 'END{print NR}' $sample)"
     		printf %s"$sample \t $count \n"  >>./read_counts.txt
     done
-
-
 
