@@ -13,15 +13,16 @@ set -o pipefail
 # fastq_2.gz
 
 # change to working directory
-cd ~/scratch/SCN/rename
+WORKING=${HOME}/scratch/SCN/rename
+cd "$WORKING"
 
 # sample list
 # sample_info=$1
 # need to hard code the file path for qsub jobs
-sample_info=~/scratch/SCN/rename/SCN_reads.txt
+sample_info=${HOME}/scratch/SCN/rename/SCN_reads.txt
 
 # path to bioawk installation
-bioawk=~/Apps/HLi/bioawk
+bioawk=${HOME}/Apps/HLi/bioawk
 
 # truncate sample info file into output file name
 outfile=$(basename $sample_info .txt)
