@@ -8,7 +8,7 @@ set -u
 set -o pipefail
 
 # input format is simply a list of fastq files, one per line
-# could build list with find
+# could build list with find; should look like list below
 # fastq_1.gz
 # fastq_2.gz
 
