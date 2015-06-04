@@ -1,35 +1,37 @@
 #!/bin/sh
 
-#PBS -l mem=6000mb,nodes=1:ppn=8,walltime=5:00:00 
+#PBS -l mem=6000mb,nodes=1:ppn=8,walltime=10:00:00 
 #PBS -m abe 
-#PBS -M hoff0792@umn.edu
+#PBS -M 
 #PBS -q lab
 
-module load bwa
 module load parallel
 
-#	The aligner command
-
-#PROGRAM=${HOME}/Shared/Software/bwa-0.7.10/bwa
+#   The aligner command
+module load bwa
 PROGRAM=bwa
 
-#	My project space folder
+#   My project space folder
 PROJECT_DIR=
 
-#	The directory for the reference sequence
-#REF_DIR=${HOME}/Shared/References/Reference_Sequences/Soybean_Cyst_Nematode
+#   Full path to reference genome
+REF_GEN=
 
-#   Reference Genome
-REF_GEN=${HOME}/Shared/References/Reference_Sequences/Soybean_Cyst_Nematode/Heterodera_glycines_OP25_genome.fa
+#   The directory with the reads
+READS_DIR=
 
-#       The directory with the reads
-READS_DIR=${HOME}/scratch/SCN
+#   Scratch directory for output, 'scratch' is a symlink to individual user scratch at /scratch*
+SCRATCH=
 
-#       Scratch directory for output, 'scratch' is a symlink to individual user scratch at /scratch*
-SCRATCH=${HOME}/scratch/SCN
-
-#       File extenstions: general, forward, and reverse
-EXT="_R1_trimmed.fq.gz"
+#   File extenstions: forward, and reverse
+#       Example
+#           "*_R1_trimmed.fq.gz"    for forward extension
+#           "*_R2_trimmed.fq.gz"    for reverse extension
+#       These are the defaults for trim_autoplot.sh
+#       The quotes and astrick before the extension are neccessary
+#           for globbing using `find`
+#       Please change below if you are not using trim_autoplot.sh
+#           for quality trimming
 FWD="*_R1_trimmed.fq.gz"
 REV="*_R2_trimmed.fq.gz"
 
@@ -39,22 +41,17 @@ FWD_FILE=${SCRATCH}/fwd.txt
 find "$READS_DIR" -name "$REV" | sort > ${SCRATCH}/rev.txt
 REV_FILE=${SCRATCH}/rev.txt
 
-#       Check for equal numbers of forward and reverse reads
+#   Check for equal numbers of forward and reverse reads
 if [ `wc -l < "$FWD_FILE"` = `wc -l < "$REV_FILE"` ]; then
     echo Equal numbers of forwad and reverse reads
 else
     exit 1
 fi
 
-#touch ${SCRATCH}/together.txt
-#SAMPLE_INFO=${SCRATCH}/together.txt
+#   Name of Project
+PROJECT=
 
-#       If there's already a list of files, insert it here and comment out the lines above
-#SAMPLE_INFO=
-
-#	The facility that did the capture
-PROJECT="SCN"
-#        Date in international format
+#   Date in international format
 YMD=`date +%Y-%m-%d`
 
 
@@ -82,20 +79,15 @@ YMD=`date +%Y-%m-%d`
 #			version of bwa used, etc.			
 #       2015-06-02
 #           Added support for parallel read mapping and running one command for all samples
-#			
+#       2015-06-04
+#           Created generallized version of script, runs in parallel
+
 mkdir -p ${SCRATCH}/${PROJECT}/${SAMPLE}
 
 cd ${SCRATCH}/${PROJECT}/${SAMPLE}
 
-#	Now we run the program with all our options
-read_map() {
-    $1 mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1 \
-        $2 \
-        $3 \
-        $4 > \
-        $5
-}
+#   Now we run the program with all our options
+#       This version runs BWA with the options listed above.
+#       Please edit for your own read mapping program.
 
-export -f read_map
-
-parallel read_map $PROGRAM $REF_GEN `cat $FWD_FILE` `cat $REV_FILE` ${SCRATCH}/${PROJECT}/${SAMPLE}_${PROJECT}_${YMD}.sam
+parallel ${PROGRAM} mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1 ${REF_GEN} {1} {2} ${SCRATCH}/${PROJECT}/${SAMPLE}_${PROJECT}_${YMD}.sam ::: `cat $FWD_FILE` ::: `cat $REV_FILE`

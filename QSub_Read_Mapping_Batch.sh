@@ -2,34 +2,37 @@
 
 #PBS -l mem=6000mb,nodes=1:ppn=8,walltime=5:00:00 
 #PBS -m abe 
-#PBS -M hoff0792@umn.edu
+#PBS -M 
 #PBS -q lab
 
-module load bwa
 module load parallel
 
 #	The aligner command
-
-#PROGRAM=${HOME}/Shared/Software/bwa-0.7.10/bwa
+module load bwa
 PROGRAM=bwa
 
 #	My project space folder
 PROJECT_DIR=
 
-#	The directory for the reference sequence
-#REF_DIR=${HOME}/Shared/References/Reference_Sequences/Soybean_Cyst_Nematode
 
-#   Reference Genome
-REF_GEN=${HOME}/Shared/References/Reference_Sequences/Soybean_Cyst_Nematode/Heterodera_glycines_OP25_genome.fa
+#   Full path to reference genome
+REF_GEN=
 
 #       The directory with the reads
-READS_DIR=${HOME}/scratch/SCN
+READS_DIR=
 
 #       Scratch directory for output, 'scratch' is a symlink to individual user scratch at /scratch*
-SCRATCH=${HOME}/scratch/SCN
+SCRATCH=
 
-#       File extenstions: general, forward, and reverse
-EXT="_R1_trimmed.fq.gz"
+#   File extenstions: forward, and reverse
+#       Example
+#           "*_R1_trimmed.fq.gz"    for forward extension
+#           "*_R2_trimmed.fq.gz"    for reverse extension
+#       These are the defaults for trim_autoplot.sh
+#       The quotes and astrick before the extension are neccessary
+#           for globbing using `find`
+#       Please change below if you are not using trim_autoplot.sh
+#           for quality trimming
 FWD="*_R1_trimmed.fq.gz"
 REV="*_R2_trimmed.fq.gz"
 
@@ -46,21 +49,16 @@ else
     exit 1
 fi
 
-#touch ${SCRATCH}/together.txt
-#SAMPLE_INFO=${SCRATCH}/together.txt
+#   Name of Project
+PROJECT=
 
-#       If there's already a list of files, insert it here and comment out the lines above
-#SAMPLE_INFO=
-
-#	The facility that did the capture
-PROJECT="SCN"
-#        Date in international format
+#   Date in international format
 YMD=`date +%Y-%m-%d`
 
 
-#	CHANGES
+#   CHANGES
 #       2013-10-11
-#		Initial Alignment
+#       Initial Alignment
 #       Using parameters
 #           -t 8: Use 8 threads
 #           -k 25: Seed length 25
@@ -70,19 +68,21 @@ YMD=`date +%Y-%m-%d`
 #           -O 8: Gap open penalty
 #           -E 1: Gap extension penalty
 #               This should capture only reads with less than five mismatches
-#		2013-10-25
-#			Paralogue problems!
-#			Changing seed length to 10
-#			Increasing the score cutoff to 85
-#		2014-10-02
-#			Some indels not being resolved properly.
-#			setting gapopen penalty to 8 and gapextend to 1
-#		2014-09-30 (what is Tom's date scheme, it was 30 Sept 2014?)
-#			Updated a number of file paths, include reference \
-#			version of bwa used, etc.			
+#       2013-10-25
+#           Paralogue problems!
+#           Changing seed length to 10
+#           Increasing the score cutoff to 85
+#       2014-10-02
+#           Some indels not being resolved properly.
+#           setting gapopen penalty to 8 and gapextend to 1
+#       2014-09-30 (what is Tom's date scheme, it was 30 Sept 2014?)
+#           Updated a number of file paths, include reference \
+#           version of bwa used, etc.           
 #       2015-06-02
-#           Added support for parallel read mapping and running one command for all samples
-#			
+#           Added support for for-looped read mapping and running one command for all samples
+#       2015-06-04
+#           Created generallized version of script, runs as a for-loop
+
 mkdir -p ${SCRATCH}/${PROJECT}/${SAMPLE}
 
 cd ${SCRATCH}/${PROJECT}/${SAMPLE}
