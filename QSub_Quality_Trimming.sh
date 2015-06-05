@@ -11,10 +11,11 @@ set -o pipefail
 
 module load parallel
 
-#   The trimming script runs seqqs, scythe, and sickle, and plots_seqqs.R
+#   The trimming script runs seqqs, scythe, and sickle
 #   The script is heavily modified from a Vince Buffalo original
 #   Most important modification is the addition of plotting of read data before &
-#   after 
+#   after. Leave the value for TRIM_SCRIPT as is unless you are not using seqqs,
+#   sickle, and scythe for quality trimming
 SEQQS_DIR=
 TRIM_SCRIPT=${SEQQS_DIR}/wrappers/trim_autoplot.sh
 
@@ -26,7 +27,7 @@ FORWARD_NAMING=
 REVERSE_NAMING=
 
 #   Project name
-PROJECT=SCN
+PROJECT=
 
 #   Output directory, currently writing full processed directory to scratch
 #   Need a symlink at ${HOME} to a scratch directory
@@ -71,4 +72,4 @@ cd ${SEQQS_DIR}/wrappers/
 
 
 #   Run the job in parallel
-parallel --xapply ${TRIM_SCRIPT} {1} {2} {3} ${OUTDIR}/${PROJECT}/{4} ::: `cat $SAMPLE_NAMES` ::: `cat $FORWARD_SAMPLES` ::: `cat $REVERSE_SAMPLES` ::: `cat $SAMPLE_NAMES`
+parallel --xapply ${TRIM_SCRIPT} {1} {2} {3} ${OUTDIR}/${PROJECT}/{4} :::: $SAMPLE_NAMES :::: $FORWARD_SAMPLES :::: $REVERSE_SAMPLES :::: $SAMPLE_NAMES
