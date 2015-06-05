@@ -71,4 +71,4 @@ cd ${SEQQS_DIR}/wrappers/
 
 
 #   Run the job in parallel
-parallel ${TRIM_SCRIPT} {3} {1} {2} ${OUTDIR}/${PROJECT}/{3} ::: `cat $FORWARD_SAMPLES` ::: `cat $REVERSE_SAMPLES` ::: `cat $SAMPLE_NAMES`
+parallel --xapply ${TRIM_SCRIPT} {1} {2} {3} ${OUTDIR}/${PROJECT}/{4} ::: `cat $SAMPLE_NAMES` ::: `cat $FORWARD_SAMPLES` ::: `cat $REVERSE_SAMPLES` ::: `cat $SAMPLE_NAMES`

@@ -90,4 +90,4 @@ cd ${SCRATCH}/${PROJECT}/${SAMPLE}
 #       This version runs BWA with the options listed above.
 #       Please edit for your own read mapping program.
 
-parallel ${PROGRAM} mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1 ${REF_GEN} {1} {2} ${SCRATCH}/${PROJECT}/${SAMPLE}_${PROJECT}_${YMD}.sam ::: `cat $FWD_FILE` ::: `cat $REV_FILE`
+parallel --xapply ${PROGRAM} mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1 ${REF_GEN} {1} {2} ${SCRATCH}/${PROJECT}/${SAMPLE}_${PROJECT}_${YMD}.sam ::: `cat $FWD_FILE` ::: `cat $REV_FILE`
