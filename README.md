@@ -2,6 +2,12 @@
 ### A series of scripts to automate genome sequence workflows
 ___
 ___
+## installer.sh
+The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. All three of these are required for use with the `Quality_Triming.sh` as-is. This script also temporarily adds each program to the `PATH`, please follow on-screen instructions to permanently add these programs to the `PATH` for future use. `installer.sh` is designed to be run from the command line directly.
+
+## sample\_list_generator.sh
+The `sample_list_generator.sh` script creates a list of samples using a directory tree for its searching. This will find **all** samples in a given directory and its subdirectories. Only use this if you are using all samples within a directory tree.
+___
 ## read_counts.sh
 The `read_counts.sh` script calls _bioawk_ to get accurate counts for read number for a list of samples. The sample list is currently hard-coded into the script to permit qsub job submission. Output is written toa tab-delimited file file with sample name drawn from the file name for the list of samples.
 
@@ -15,6 +21,3 @@ The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](
 
 ## Read\_Mapping.sh
 The `Read_Mapping.sh` scripts uses the [Burrows-Wheeler Aligner](http://bio-bwa.sourceforge.net/) (BWA) to read map a series of sequences. These scripts are both designed to use the results from `Quality_Trimming.sh` for the read mapping. Both scripts find files organized into a project directory and automatically sort them by sample. `QSub_Read_Mapping_Parallel.sh` uses [GNU Parallel](http://www.gnu.org/software/parallel/) to run the read mapping for each sample in parallel. This script designed to be run using the Portable Batch System.
-___
-## installer.sh
-The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. All three of these are required for use with the `Quality_Triming.sh` as-is. This script also temporarily adds each program to the `PATH`, please follow on-screen instructions to permanently add these programs to the `PATH` for future use. `installer.sh` is designed to be run from the command line directly.
