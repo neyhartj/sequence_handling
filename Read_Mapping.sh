@@ -5,6 +5,10 @@
 #PBS -M 
 #PBS -q lab
 
+set -e
+set -u
+set -o pipefail
+
 module load parallel
 
 #   The aligner command
@@ -20,32 +24,33 @@ PROJECT=
 REF_GEN=
 
 #   The directory with the reads
-READS_DIR=
+#   NOT NEEDED
+#READS_DIR=
 
 #   Scratch directory for output, 'scratch' is a symlink to individual user scratch at /scratch*
 SCRATCH=
 
-#   File extenstions: forward, and reverse, and general
+#   List of samples
+SAMPLE_INFO=
+
+#   File extenstions: forward, and reverse extensions
 #       Example
-#           "*_R1_trimmed.fq.gz"    for forward extension
-#           "*_R2_trimmed.fq.gz"    for reverse extension
-#           "*_R1_trimmed.fq.gz"    for general extension
+#           "_R1_trimmed.fq.gz"    for forward extension
+#           "_R2_trimmed.fq.gz"    for reverse extension
 #       These are the defaults for trim_autoplot.sh
-#       The quotes and astrick before the forward and
-#           reverse extensions are neccessary
-#           for globbing using `find`
-#       For the general extension, please make it the same as forward
-#           but without the astrick before hand
+#       The quotes are neccessary
 #       Please change below if you are not using trim_autoplot.sh
 #           for quality trimming
-FWD="*_R1_trimmed.fq.gz"
-REV="*_R2_trimmed.fq.gz"
-EXT="_R1_trimmed.fq.gz"
+FWD="_R1_trimmed.fq.gz"
+REV="_R2_trimmed.fq.gz"
+#EXT="_R1_trimmed.fq.gz"
 
-#       Generate a list of all files that match
-find "$READS_DIR" -name "$FWD" | sort > ${SCRATCH}/fwd.txt
+#       Generate lists of forward and reverse reads that match
+grep -E "$FWD" ${SAMPLE_INFO} | sort > ${SCRATCH}/fwd.txt
+#find "$READS_DIR" -name "$FWD" | sort > ${SCRATCH}/fwd.txt
 FWD_FILE=${SCRATCH}/fwd.txt
-find "$READS_DIR" -name "$REV" | sort > ${SCRATCH}/rev.txt
+#find "$READS_DIR" -name "$REV" | sort > ${SCRATCH}/rev.txt
+grep -E "$REV" ${SAMPLE_INFO} | sort > ${SCRATCH}/rev.txt
 REV_FILE=${SCRATCH}/rev.txt
 
 #   Check for equal numbers of forward and reverse reads
@@ -59,7 +64,7 @@ fi
 for i in `seq $(wc -l < $FWD_FILE)`
 do
     s=`head -"$i" "$FWD_FILE" | tail -1`
-    basename $s $EXT >> ${SCRATCH}/samples.txt
+    basename "$s" "$FWD" >> "${SCRATCH}"/samples.txt
 done
 
 SAMPLE_NAMES=${SCRATCH}/samples.txt
@@ -108,8 +113,3 @@ YMD=`date +%Y-%m-%d`
 mkdir -p ${SCRATCH}/${PROJECT}
 ${PROGRAM} index ${REF_GEN}
 parallel --xapply ${PROGRAM} mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1 ${REF_GEN} {1} {2} > ${SCRATCH}/${PROJECT}/{3}_${PROJECT}_${YMD}.sam :::: $FWD_FILE :::: $REV_FILE :::: $SAMPLE_NAMES
-
-#   Cleanup file lists
-rm $FWD_FILE
-rm $REV_FILE
-rm $SAMPLE_NAMES

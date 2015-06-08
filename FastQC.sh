@@ -5,16 +5,15 @@
 #PBS -M 
 #PBS -q lab
 
-#   Full path to directory where samples are stored
-#       Requires quotes around directory path
-SAMPLE_DIR=""
+set -e
+set -u
+set -o pipefail
 
-#   File extension
-#       Example
-#           *.txt.gz
-#           *.fa.gz
-#       Requires astrick for globbing
-EXT=*.txt.gz
+module load parallel
+
+#   List of samples to be processed
+#   Need to hard code the file path for qsub jobs
+SAMPLE_INFO=
 
 #   Full path to out directory
 #       Requires quotes around directory path
@@ -23,8 +22,5 @@ OUT=""
 #   Load FastQC Module
 module load fastqc
 
-#   Load Parallel Module
-module load parallel
-
 #   Run FastQC in parallel
-find $SAMPLE_DIR -name $EXT | parallel "fastqc {} -o ${OUT}"
+cat ${SAMPLE_INFO} | parallel "fastqc {} -o ${OUT}"
