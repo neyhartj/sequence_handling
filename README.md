@@ -3,10 +3,10 @@
 ___
 ___
 ## installer.sh
-The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. All three of these are required for use with the `Quality_Triming.sh` as-is. This script also temporarily adds each program to the `PATH`, please follow on-screen instructions to permanently add these programs to the `PATH` for future use. `installer.sh` is designed to be run from the command line directly.
+The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. All three of these are required for use with the `Quality_Triming.sh` as-is. Running `installer.sh install` runs the installation process, temporarily adding each program to the `PATH`. To permanently add these programs to the `PATH` for future use, please follow on-screen instructions or run `installer.sh echo`. `installer.sh` is designed to be run from the command line directly.
 
 ## sample\_list_generator.sh
-The `sample_list_generator.sh` script creates a list of samples using a directory tree for its searching. This will find **all** samples in a given directory and its subdirectories. Only use this if you are using all samples within a directory tree.
+The `sample_list_generator.sh` script creates a list of samples using a directory tree for its searching. This will find **all** samples in a given directory and its subdirectories. Only use this if you are using all samples within a directory tree. Running it with no arguments will give a detailed usage message, or one can edit the script to have variables hard-coded. `sample_list_generator.sh` is designed to be run from the command line directly.
 ___
 ## read_counts.sh
 The `read_counts.sh` script calls _bioawk_ to get accurate counts for read number for a list of samples. The sample list is currently hard-coded into the script to permit qsub job submission. Output is written toa tab-delimited file file with sample name drawn from the file name for the list of samples.
