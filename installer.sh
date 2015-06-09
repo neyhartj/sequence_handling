@@ -131,6 +131,39 @@ case "$1" in
             not_installed
         fi
         ;;
+    "bioawk" )
+        if `command -v bioawk > dev/null 2> dev/null`
+        then
+            echo "Bioawk is installed"
+        else
+            cd "${SOFT}"
+            git clone https://github.com/lh3/bioawk.git
+            cd bioawk
+            make
+            BIOAWK_DIR=`pwd`
+        fi
+        ;;
+    "samtools" )
+        if `command -v samtools > /dev/null 2> dev/null`
+        then
+            echo "sammtools is installed"
+        else
+            cd "${SOFT}"
+            git clone https://github.com/samtools/htslib.git
+            cd htslib
+            ./configure --prefix=`pwd`
+            make
+            make install
+            HTSLIB_DIR=`pwd`
+            export PATH=$PATH:$HTSLIB_DIR
+            cd "${SOFT}"
+            git clone https://github.com/samtools/samtools.git
+            cd samtools
+            make
+            SAMTOOLS_DIR=`pwd`
+            export PATH=$PATH:$SAMTOOLS_DIR
+        fi
+        ;;
     * )
         usage
         ;;
