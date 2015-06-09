@@ -119,16 +119,7 @@ case "$1" in
                     echo 'Please write "export PATH:$PATH:<full file path/>" in .bash_profile'
                     echo "found in your home directory"
                     sleep 3
-                    echo "The full paths for these programs are"
-                    sleep 2
-                    echo "Seqqs: `which seqqs`"
-                    sleep 2
-                    echo "Sickle: `which sickle`"
-                    sleep 2
-                    echo "Scythe: `which scythe`"
-                    sleep 3
-                    echo
-                    echo 'Put these in place of "<full file path/>" for each of the three programs'
+                    echo 'Put the path to the directories in place of "<full file path/>" for each of the three programs'
                     sleep 3
                 else
                     not_installed
