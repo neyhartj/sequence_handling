@@ -2,7 +2,7 @@
 
 #PBS -l mem=6000mb,nodes=1:ppn=8,walltime=10:00:00 
 #PBS -m abe 
-#PBS -M 
+#PBS -M user@example.com
 #PBS -q lab
 
 set -e
@@ -11,27 +11,50 @@ set -o pipefail
 
 module load parallel
 
+#   This script is a qsub submission for read mapping a batch of files.
+#   To use, on line 5, change the 'user@example.com' to your own email address
+#       to get notifications on start and completion for this script
+#   Define a path to the Burrows-Wheeler Aligner (BWA) in the 'PROGRAM' field on line 
+#       If using MSI, leave the definition as is to use their installation of BWA
+#       Otherwise, it should look like this:
+#           PROGRAM=${HOME}/software/bwa/bwa
+#       NOTE: This nees the full path to the BWA program, not just the directory in which it's contained
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 35
+#       This should look like:
+#           SAMPLE_INFO=${HOME}/Directory/list.txt
+#       Use ${HOME}, as it is a link that the shell understands as your home directory
+#           and the rest is the full path to the actual list of samples
+#   Name the project in the 'PROJECT' field on line 
+#       This should look lke:
+#           PROJECT=Genetics
+#   Write the full path to the refernce genome in the 'REF_GEN' field on line
+#       This should loo like:
+#           REF_GEN=${HOME}/References/reference_genome.fa
+#   Put the full directory path for the output in the 'SCRATCH' field on line 
+#       This should look like:
+#           SCRATCH="${HOME}/Out_Directory"
+#       Adjust for your own out directory.
+#   Run this script using the qsub command
+#       qsub Read_Mapping.sh
+#   This script outputs .sam files for each sample
+
 #   The aligner command
 module load bwa
 PROGRAM=bwa
 
+#   List of samples
+SAMPLE_INFO=
+
 #   Name of Project
 #       Please wrap this in quotes
-#       Example: "SCN"
+#       Example: "Genetics"
 PROJECT=
 
 #   Full path to reference genome
 REF_GEN=
 
-#   The directory with the reads
-#   NOT NEEDED
-#READS_DIR=
-
 #   Scratch directory for output, 'scratch' is a symlink to individual user scratch at /scratch*
 SCRATCH=
-
-#   List of samples
-SAMPLE_INFO=
 
 #   File extenstions: forward, and reverse extensions
 #       Example
@@ -43,7 +66,6 @@ SAMPLE_INFO=
 #           for quality trimming
 FWD="_R1_trimmed.fq.gz"
 REV="_R2_trimmed.fq.gz"
-#EXT="_R1_trimmed.fq.gz"
 
 #       Generate lists of forward and reverse reads that match
 grep -E "$FWD" ${SAMPLE_INFO} | sort > ${SCRATCH}/fwd.txt

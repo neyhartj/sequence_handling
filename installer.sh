@@ -91,7 +91,7 @@ case "$1" in
         echo
         echo "If you want to have these programs permanently added to your PATH"
         sleep 2
-        echo 'Please write "export PATH:$PATH:<full file path/>" in .bash_profile'
+        echo 'Please write "export PATH=$PATH:<full file path/>" in .bash_profile'
         echo "found in your home directory"
         sleep 3
         echo
