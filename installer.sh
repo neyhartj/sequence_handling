@@ -17,24 +17,34 @@
 
 usage() {
     echo -e "\
-Usage: ./installer.sh install \n\
+Usage: ./installer.sh <option/> \n\
 \n\
-This script installs 'Sickle', 'Scythe' and 'Seqqs' from GitHub for use \n\
-with other scripts in this workflow. This script will spit out the path for the \n\
-'Seqqs' directory. This needs to be put into 'Quality Trimming.sh' before use. \n\
+Where <option/> is one of 'install', 'bioawk', 'samtools', or 'R' \n\
+
+'./installer.sh install'  installs 'Sickle', 'Scythe' and 'Seqqs' from GitHub for use \n\
+with 'Quality_Trimming.sh' script. This script will spit out the path for the \n\
+'Seqqs' directory. This needs to be put into 'Quality_Trimming.sh' before use. \n\
 \n\
-These programs are NOT permanently added to your PATH. To do so, follow on-screen \n\
-prompts or run ./installer.sh echo \n\
+'./installer.sh bioawk' installs 'Bioawk' from GitHub \n\
+for use with the 'read_counts.sh' script. \n\
+\n\
+'./installer.sh samtools' installs 'Samtools' from GitHub \n\
+for use with the 'Read_Mapping.sh' and 'Coverage_Map' scripts. \n\
+\n\
+'./installer.sh R' installs R from CRAN \n\
+for use with the 'Quality_Trimming.sh' script. \n\
+\n\
+NOTE: Neither GNU Parallel nor the Burrows-Wheeler Aligner (BWA) \n\
+are installed using this script. \n\
+GNU Parallel is used in every script with capitals in the name. \n\
+BWA is used for the 'Read_Mapping.sh' script. \n\
+If not using the Minnesota Supercomputing Institute's resources, \n\
+you will need to install these manually from their websites. \n\
+\n\
+BWA:            http://bio-bwa.sourceforge.net/
+GNU Parallel:   http://www.gnu.org/software/parallel/
 " >&2
     exit 1
-}
-
-not_installed() {
-echo "Please make sure you have Sickle, Seqqs, Scythe installed on your system"
-sleep 2
-echo "Run ./installer.sh install to do so"
-sleep 2
-exit 1
 }
 
 case "$1" in
@@ -59,8 +69,10 @@ case "$1" in
         echo "Done"
         SEQQS_DIR=`pwd`
         echo "Seqqs directory is ${SEQQS_DIR}"
+        sleep 2
         echo 'This needs to be written in "QSub_trim_autoplot.sh"'
-        export PATH="$PATH":"${SEQQS_DIR}"
+        sleep 3
+        echo export PATH='$PATH':"${SEQQS_DIR}" >> "${HOME}"/.bash_profile
         #   Install Sickle from Vince Buffalo's Sickle GitHub Repository
         echo "Fetching Sickle from GitHub"
         cd "${SOFT}"
@@ -70,7 +82,7 @@ case "$1" in
         make
         echo "Done"
         SICKLE_DIR=`pwd`
-        export PATH="$PATH":"${SICKLE_DIR}"
+        echo export PATH='$PATH':"${SICKLE_DIR}" >> "${HOME}"/.bash_profile
         #   Install Scythe from Vince Buffalo's Scythe GitHub repository
         echo "Fetching Scythe form GitHub"
         cd "${SOFT}"
@@ -80,56 +92,7 @@ case "$1" in
         make all
         echo "Done"
         SCYTHE_DIR=`pwd`
-        export PATH="$PATH":"${SCYTHE_DIR}"
-            echo "Please note that each of these programs has been added to your PATH"
-        sleep 3
-        echo "This allows them to be called without being in their respective directories"
-        sleep 3
-        echo
-        echo "However, this only works for this terminal window THIS TIME only"
-        sleep 3
-        echo
-        echo "If you want to have these programs permanently added to your PATH"
-        sleep 2
-        echo 'Please write "export PATH=$PATH:<full file path/>" in .bash_profile'
-        echo "found in your home directory"
-        sleep 3
-        echo
-        echo "The full paths for these programs are"
-        sleep 2
-        echo "Seqqs: $SEQQS_DIR"
-        sleep 2
-        echo "Sickle: $SICKLE_DIR"
-        sleep 2
-        echo "Scythe: $SCYTHE_DIR"
-        sleep 3
-        echo
-        echo 'Put these in place of "<full file path/>" for each of the three programs'
-        sleep 3
-        ;;
-    "echo" )
-        if `command -v seqqs > /dev/null 2> /dev/null`
-        then
-            if `command -v sickle > /dev/null 2> /dev/null`
-            then
-                if `command -v scythe > /dev/null 2> /dev/null`
-                then
-                    echo "If you want to have Sickle, Scythe, and Seqqs permanently added to your PATH"
-                    sleep 2
-                    echo 'Please write "export PATH:$PATH:<full file path/>" in .bash_profile'
-                    echo "found in your home directory"
-                    sleep 3
-                    echo 'Put the path to the directories in place of "<full file path/>" for each of the three programs'
-                    sleep 3
-                else
-                    not_installed
-                fi
-            else
-                not_installed
-            fi
-        else
-            not_installed
-        fi
+        echo export PATH='$PATH':"${SCYTHE_DIR}" >> "${HOME}"/.bash_profile
         ;;
     "bioawk" )
         if `command -v bioawk > dev/null 2> dev/null`
@@ -141,6 +104,7 @@ case "$1" in
             cd bioawk
             make
             BIOAWK_DIR=`pwd`
+            echo export PATH-'$PATH':"${BIOAWK_DIR}" >> "${HOME}"/.bash_profile
         fi
         ;;
     "samtools" )
@@ -155,13 +119,35 @@ case "$1" in
             make
             make install
             HTSLIB_DIR=`pwd`
-            export PATH=$PATH:$HTSLIB_DIR
+            echo export PATH='$PATH':"${HTSLIB_DIR}" >> "${HOME}"/.bash_profile
             cd "${SOFT}"
             git clone https://github.com/samtools/samtools.git
             cd samtools
             make
             SAMTOOLS_DIR=`pwd`
-            export PATH=$PATH:$SAMTOOLS_DIR
+            echo export PATH='$PATH':"${SAMTOOLS_DIR}" >> "${HOME}"/.bash_profile
+        fi
+        ;;
+    "R" )
+        if `command -v Rscript > /dev/null 2> /dev/null`
+        then 
+            echo "R is installed"
+        else
+            if `command -v wget > /dev/null 2> /dev/null`
+            then
+                cd "${SOFT}"
+                wget --no-directories --progress=bar -r -A.tar.gz http://cran.r-project.org/
+                rm robots.txt
+                tar -xvzf *.tar.gz
+                cd R*
+                ./configure --prefix=`pwd`
+                make
+                cd bin
+                R_DIR=`pwd`
+                echo export PATH='$PATH':"${R_DIR}" >> "${HOME}"/.bash_profile
+            else
+                echo "Please install wget to your system for to install R using this script"
+            fi
         fi
         ;;
     * )
