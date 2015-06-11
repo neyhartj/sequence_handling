@@ -74,6 +74,9 @@ OUTDIR=
 #   Directory where samples are stored
 WORKING=
 
+#   Load the R Module
+module load R
+
 #   Test to see if there are equal numbers of forward and reverse reads
 FORWARD_COUNT="`grep -cE "$FORWARD_NAMING" $SAMPLE_INFO`"
 REVERSE_COUNT="`grep -cE "$REVERSE_NAMING" $SAMPLE_INFO`"
