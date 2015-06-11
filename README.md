@@ -43,10 +43,13 @@ This workflow requires the following dependencies:
  - [_Bioawk_](https://github.com/lh3/bioawk)
  - [_Samtools_](http://www.htslib.org/)
  - [_R_](http://www.htslib.org/)
- - The [Burrows-Wheeler Aligner](http://bio-bwa.sourceforge.net/) (BWA)
- - [GNU Parallel](http://www.gnu.org/software/parallel/)
+ - [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+ - The [_Burrows-Wheeler Aligner_](http://bio-bwa.sourceforge.net/) (BWA)
+ - [_GNU Parallel_](http://www.gnu.org/software/parallel/)
 
-All of these except for BWA and _GNU Parallel_ can be installed using `installer.sh`
+When running these scripts on the Minnesota Supercomputing Institute's (MSI) resources, _R_, _FastQC_, BWA, and _GNU Parallel_ are already loaded into the scripts; the only tools need to be downloaded and installed seperately are _Seqqs_, _Sickle_, _Scythe_, _Bioawk_, and _Samtools_.
+
+If not running on MSI's resources, all of these dependencies except for _FastQC_, BWA, and _GNU Parallel_ can be installed using `installer.sh`
 ___
 
 ## Shell Scripts
@@ -73,7 +76,7 @@ The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](
 
 
 ### Read\_Mapping.sh
-The `Read_Mapping.sh` scripts uses the [BWA](http://bio-bwa.sourceforge.net/) to read map a series of sequences. These scripts are both designed to use the results from `Quality_Trimming.sh` for the read mapping. Both scripts find files organized into a project directory and automatically sort them by sample. `QSub_Read_Mapping_Parallel.sh` uses [GNU Parallel](http://www.gnu.org/software/parallel/) to run the read mapping for each sample in parallel. This script designed to be run using the Portable Batch System.
+The `Read_Mapping.sh` scripts uses [BWA](http://bio-bwa.sourceforge.net/) to read map a series of sequences. These scripts are both designed to use the results from `Quality_Trimming.sh` for the read mapping. Both scripts find files organized into a project directory and automatically sort them by sample. `QSub_Read_Mapping_Parallel.sh` uses [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run the read mapping for each sample in parallel. This script designed to be run using the Portable Batch System.
 ___
 ## TODO
 

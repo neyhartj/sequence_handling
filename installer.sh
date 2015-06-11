@@ -33,6 +33,7 @@ for use with the 'Read_Mapping.sh' and 'Coverage_Map' scripts. \n\
 \n\
 './installer.sh R' installs R from CRAN \n\
 for use with the 'Quality_Trimming.sh' script. \n\
+For those running on MSI, there is built-in loading of the R module. \n\
 \n\
 NOTE: Neither GNU Parallel nor the Burrows-Wheeler Aligner (BWA) \n\
 are installed using this script. \n\
@@ -68,10 +69,6 @@ case "$1" in
         make
         echo "Done"
         SEQQS_DIR=`pwd`
-        echo "Seqqs directory is ${SEQQS_DIR}"
-        sleep 2
-        echo 'This needs to be written in "QSub_trim_autoplot.sh"'
-        sleep 3
         echo export PATH='$PATH':"${SEQQS_DIR}" >> "${HOME}"/.bash_profile
         #   Install Sickle from Vince Buffalo's Sickle GitHub Repository
         echo "Fetching Sickle from GitHub"
@@ -93,8 +90,24 @@ case "$1" in
         echo "Done"
         SCYTHE_DIR=`pwd`
         echo export PATH='$PATH':"${SCYTHE_DIR}" >> "${HOME}"/.bash_profile
+        cd "${ROOT}"
+        source "${HOME}"/.bash_profile
+        echo "Seqqs directory is ${SEQQS_DIR}"
+        sleep 2
+        echo 'This needs to be written in "QSub_trim_autoplot.sh"'
+        sleep 3
         ;;
     "bioawk" )
+        ROOT=`pwd`
+        if [ -d "${ROOT}"/software ]; then
+            cd "${ROOT}"/software
+            SOFT=`pwd`
+        else
+            cd "${ROOT}"
+            mkdir software
+            cd software
+            SOFT=`pwd`
+        fi
         if `command -v bioawk > dev/null 2> dev/null`
         then
             echo "Bioawk is installed"
@@ -104,10 +117,22 @@ case "$1" in
             cd bioawk
             make
             BIOAWK_DIR=`pwd`
-            echo export PATH-'$PATH':"${BIOAWK_DIR}" >> "${HOME}"/.bash_profile
+            echo export PATH='$PATH':"${BIOAWK_DIR}" >> "${HOME}"/.bash_profile
         fi
+        cd "${ROOT}"
+        source "${HOME}"/.bash_profile
         ;;
     "samtools" )
+        ROOT=`pwd`
+        if [ -d "${ROOT}"/software ]; then
+            cd "${ROOT}"/software
+            SOFT=`pwd`
+        else
+            cd "${ROOT}"
+            mkdir software
+            cd software
+            SOFT=`pwd`
+        fi
         if `command -v samtools > /dev/null 2> dev/null`
         then
             echo "sammtools is installed"
@@ -115,6 +140,7 @@ case "$1" in
             cd "${SOFT}"
             git clone https://github.com/samtools/htslib.git
             cd htslib
+            autoconf
             ./configure --prefix=`pwd`
             make
             make install
@@ -127,8 +153,20 @@ case "$1" in
             SAMTOOLS_DIR=`pwd`
             echo export PATH='$PATH':"${SAMTOOLS_DIR}" >> "${HOME}"/.bash_profile
         fi
+        cd "${ROOT}"
+        source "${HOME}"/.bash_profile
         ;;
     "R" )
+        ROOT=`pwd`
+        if [ -d "${ROOT}"/software ]; then
+            cd "${ROOT}"/software
+            SOFT=`pwd`
+        else
+            cd "${ROOT}"
+            mkdir software
+            cd software
+            SOFT=`pwd`
+        fi
         if `command -v Rscript > /dev/null 2> /dev/null`
         then 
             echo "R is installed"
@@ -149,6 +187,8 @@ case "$1" in
                 echo "Please install wget to your system for to install R using this script"
             fi
         fi
+        cd "${ROOT}"
+        source "${HOME}"/.bash_profile
         ;;
     * )
         usage
