@@ -66,8 +66,8 @@ The `Read_Counts.sh` script calls _Bioawk_ to get accurate counts for read numbe
 
 _Bioawk_ is available through [Github](https://github.com/lh3/bioawk).
 
-### FastQC.sh
-The `FastQC.sh` script runs [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) on the command line on a series of samples organized in a project directory for quality control. Our recommendation is using this both before and after quality trimming and before read mapping. This script is designed to be run using the Portable Batch System
+### Assess_Quality.sh
+The `Assess_Quality.sh` script runs [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) on the command line on a series of samples organized in a project directory for quality control. Our recommendation is using this both before and after quality trimming and before read mapping. This script is designed to be run using the Portable Batch System
 
 ### Quality\_Trimming.sh
 The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](https://github.com/morrelllab.seqqs) repository on GitHub) on a series of samples organized in a project directory.. In addition to requiring _Seqqs_ to be installed, this also requires [GNU Parallel](http://www.gnu.org/software/parallel/) to be installed on the system. This script is set up to be run using the [Portable Batch System](http://www.pbsworks.com/).
@@ -78,7 +78,7 @@ The `Read_Mapping.sh` scripts uses [BWA](http://bio-bwa.sourceforge.net/) to rea
 ___
 ## TODO
 
- - Generalize `read_counts.sh` for any project.
+ - ~~Generalize `read_counts.sh` for any project.~~ DONE!
  - Add better list-out methods
  - Add coverage map script to workflow
  - keep README updated
