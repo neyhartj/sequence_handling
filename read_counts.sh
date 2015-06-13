@@ -28,7 +28,7 @@ set -o pipefail
 
 #   List of samples to be processed
 #   Need to hard code the file path for qsub jobs
-sample_info=${HOME}/scratch/SCN/rename/SCN_reads.txt
+sample_info=
 
 #   Specify path to directory where reads are stored
 #   Not needed
