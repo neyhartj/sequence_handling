@@ -42,4 +42,5 @@ OUT=""
 module load fastqc
 
 #   Run FastQC in parallel
+mkdir -p ${OUT}
 cat ${SAMPLE_INFO} | parallel "fastqc {} -o ${OUT}"
