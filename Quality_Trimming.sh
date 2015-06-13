@@ -112,8 +112,6 @@ cd ${SEQQS_DIR}/wrappers/
 parallel --xapply ${TRIM_SCRIPT} {1} {2} {3} ${OUTDIR}/${PROJECT}/{4} :::: $SAMPLE_NAMES :::: $FORWARD_SAMPLES :::: $REVERSE_SAMPLES :::: $SAMPLE_NAMES
 
 #   Create a list of outfiles to be used by Read_Mapping.sh
-cd ${OUTDIR}/${PROJECT}
-
-find . -name "*.fq.gz" > "${PROJECT}"_samples_trimmed.txt
-echo List for Read_Mapping.sh can be found at
+find ${OUTDIR}/${PROJECT} -name "*.fq.gz" | sort > ${OUTDIR}/${PROJECT}/"${PROJECT}"_samples_trimmed.txt
+echo "List for Read_Mapping.sh can be found at"
 echo "${OUTDIR}"/"${PROJECT}"/"${PROJECT}"_samples_trimmed.txt
