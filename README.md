@@ -60,13 +60,11 @@ The `sample_list_generator.sh` script creates a list of samples using a director
 ___
 
 ## Batch Submission Scripts
-### read_counts.sh
+### Read_Counts.sh
 
-**NOTE: this script is not yet ready for general use**
+The `Read_Counts.sh` script calls _Bioawk_ to get accurate counts for read number for a list of samples. The sample list is currently hard-coded into the script to permit qsub job submission. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples.
 
-~~The `read_counts.sh` script calls _Bioawk_ to get accurate counts for read number for a list of samples. The sample list is currently hard-coded into the script to permit qsub job submission. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples.~~
-
-~~_Bioawk_ is available through [Github](https://github.com/lh3/bioawk).~~
+_Bioawk_ is available through [Github](https://github.com/lh3/bioawk).
 
 ### FastQC.sh
 The `FastQC.sh` script runs [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) on the command line on a series of samples organized in a project directory for quality control. Our recommendation is using this both before and after quality trimming and before read mapping. This script is designed to be run using the Portable Batch System
