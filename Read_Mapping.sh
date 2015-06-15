@@ -134,4 +134,4 @@ YMD=`date +%Y-%m-%d`
 
 mkdir -p ${SCRATCH}/${PROJECT}
 ${PROGRAM} index ${REF_GEN}
-parallel --xapply ${PROGRAM} mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1 ${REF_GEN} {1} {2} > ${SCRATCH}/${PROJECT}/{3}_${PROJECT}_${YMD}.sam :::: $FWD_FILE :::: $REV_FILE :::: $SAMPLE_NAMES
+parallel --xapply "${PROGRAM} mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1 ${REF_GEN} {1} {2} > ${SCRATCH}/${PROJECT}/{3}_${PROJECT}_${YMD}.sam" :::: $FWD_FILE :::: $REV_FILE :::: $SAMPLE_NAMES
