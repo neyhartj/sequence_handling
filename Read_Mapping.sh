@@ -1,7 +1,7 @@
 #!/bin/sh
 
-#PBS -l mem=1gbb,nodes=1:ppn=8,walltime=10:00:00 
-#PBS -m abe 
+#PBS -l mem=16gb,nodes=1:ppn=8,walltime=16:00:00 
+#PBS -m abe
 #PBS -M user@example.com
 #PBS -q lab
 
