@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-#PBS -l mem=1gb,nodes=1:ppn=4,walltime=8:00:00 
+#PBS -l mem=1gb,nodes=1:ppn=8,walltime=20:00:00 
 #PBS -m abe 
 #PBS -M user@example.com
 #PBS -q lab
