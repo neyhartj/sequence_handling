@@ -68,7 +68,7 @@ case "$1" in
         }
         # generate a series of QSub submissions per script
         module load parallel
-        echo "parallel --xapply map {1} {2} {3} :::: $FWD_FILE :::: $REV_FILE :::: $SAMPLE_NAMES"
+        parallel --xapply "map {1} {2} {3} | echo" :::: $FWD_FILE :::: $REV_FILE :::: $SAMPLE_NAMES
         ;;
     "index" )
         module load bwa
