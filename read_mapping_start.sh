@@ -57,6 +57,7 @@ case "$1" in
         module load bwa
         REF_GEN="$2"
         bwa index "${REF_GEN}"
+        ;;
     * )
         usage
         ;;
