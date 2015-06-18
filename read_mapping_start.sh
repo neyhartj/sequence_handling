@@ -38,6 +38,8 @@ case "$1" in
         SAMPLE_INFO="$4"
         EMAIL="$5"
         SETTINGS="mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1"
+        #   Create scratch directory if it doesn't exist
+        mkdir -p ${SCRATCH}
         #   Generate lists of forward and reverse reads that match
         FWD="_R1_trimmed.fq.gz"
         REV="_R2_trimmed.fq.gz"
@@ -70,8 +72,7 @@ case "$1" in
         # generate a series of QSub submissions per script
         QUE_SETTINGS="-l mem=8gb,nodes=1:ppn=8,walltime=12:00:00 -m abe -M ${EMAIL}"
         module load parallel
-        echo parallel --xapply map {1} {2} {3} :::: "$FWD_FILE" :::: "$REV_FILE" :::: "$SAMPLE_NAMES" | \
-        qsub "${QUE_SETTINGS}"
+        parallel --xapply echo "echo ${SETTINGS} ${REF_GEN} {1} {2} > ${SCRATCH}/{3}_${YMD} | qsub ${QUE_SETTINGS} -m abe -M ${EMAIL}" :::: "$FWD_FILE" :::: "$REV_FILE" :::: "$SAMPLE_NAMES"
         ;;
     "index" )
         module load bwa
