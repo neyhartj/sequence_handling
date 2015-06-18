@@ -15,6 +15,9 @@ Usage:
     exit 1
 }
 
+if [ "$#" -lt 1 ]; then
+    usage;
+fi
 
 case "$1" in
     "map" )
