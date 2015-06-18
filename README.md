@@ -7,11 +7,11 @@ ___
 
 `sequence_handling` is a series of scripts to automate and speed up DNA sequence aligning and quality control through the use of our workflow outlined here. This repository contains two kinds of scripts: *Shell Scripts* and *Batch Submission Scripts*.
 
-The former group is designed to be run directly from the command line and should be run before using the *Batch Submission Scripts*. These serve as partial dependency installers and a way to generate a list for batch submission.
+The former group is designed to be run directly from the command line. These serve as partial dependency installers, a way to generate a list for batch submission, and QSub starters. Running any of these scripts without any arguments generates a usage message for more details.
 
 The latter group is designed to run the workflow in batch and in parallel. They use a list of sequences, with full sequence paths, as their input and utilize [_GNU Parallel_](http://www.gnu.org/software/parallel/) to speed up the process. These are the scripts that will find the depth count of the reads, trim off adapter sequences, map the reads back to a reference genome, and run quality control checks along the way.
 
-> **NOTE:** the latter group of scripts are designed to use the Portable Batch System and run on the Minnesota Supercomputing Institute. Modifications will need to be made if not using these systems.
+> **NOTE:** the latter group of scripts and `read_mapping_start.sh` are designed to use the Portable Batch System and run on the [Minnesota Supercomputing Institute](https://www.msi.umn.edu) (MSI). Modifications will need to be made if not using these systems.
 
 ### Why use list-based batch submission?
 
@@ -44,7 +44,7 @@ This workflow requires the following dependencies:
  - [_Samtools_](http://www.htslib.org/)
  - [_R_](http://www.htslib.org/)
  - [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
- - The [_Burrows-Wheeler Aligner_](http://bio-bwa.sourceforge.net/) (BWA)
+ - [_The Burrows-Wheeler Aligner_](http://bio-bwa.sourceforge.net/) (BWA)
  - [_GNU Parallel_](http://www.gnu.org/software/parallel/)
 
 When running these scripts on the Minnesota Supercomputing Institute's (MSI) resources, _R_, _FastQC_, BWA, and _GNU Parallel_ are already loaded into the scripts; the only tools need to be downloaded and installed seperately are _Seqqs_, _Sickle_, _Scythe_, _Bioawk_, and _Samtools_.
@@ -53,34 +53,44 @@ If not running on MSI's resources, all of these dependencies except for _FastQC_
 ___
 
 ## Shell Scripts
+
+**NOTE: Running any of these scripts without arguments generates a usage message for greater detail about how to use them**
+
 ### installer.sh
-The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. It also has options for installing [_Bioawk_](https://github.com/lh3/bioawk), [_Samtools_](http://www.htslib.org/) and [_R_](http://www.htslib.org/), all dependencies for various scripts within this package. 
-### sample\_list_generator.sh
+
+The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. It also has options for installing [_Bioawk_](https://github.com/lh3/bioawk), [_Samtools_](http://www.htslib.org/) and [_R_](http://www.htslib.org/), all dependencies for various scripts within this package.
+
+### sample\_list\_generator.sh
+
 The `sample_list_generator.sh` script creates a list of samples using a directory tree for its searching. This will find **all** samples in a given directory and its subdirectories. Only use this if you are using all samples within a directory tree. Running it with no arguments will give a detailed usage message, or one can edit the script to have variables hard-coded. `sample_list_generator.sh` is designed to be run from the command line directly.
+
+### read\_mapping\_start.sh
+
+The `read_mapping_start.sh` script generates a series of QSub submissions for use with the [Portable Batch System](http://www.pbsworks.com/) on MSI's resources. It uses [GNU Parallel](http://www.gnu.org/software/parallel/) to start a series of [BWA](http://bio-bwa.sourceforge.net/) sessions to map reads back to a reference genome.
 ___
 
 ## Batch Submission Scripts
 ### Read_Counts.sh
 
-The `Read_Counts.sh` script calls _Bioawk_ to get accurate counts for read number for a list of samples. The sample list is currently hard-coded into the script to permit qsub job submission. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples.
-
-_Bioawk_ is available through [Github](https://github.com/lh3/bioawk).
+The `Read_Counts.sh` script calls [_Bioawk_](https://github.com/lh3/bioawk) to get accurate counts for read number for a list of samples. The sample list is currently hard-coded into the script to permit qsub job submission. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples. This script is designed to be run using the [Portable Batch System](http://www.pbsworks.com/).
 
 ### Assess_Quality.sh
-The `Assess_Quality.sh` script runs [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) on the command line on a series of samples organized in a project directory for quality control. Our recommendation is using this both before and after quality trimming and before read mapping. This script is designed to be run using the Portable Batch System
+
+The `Assess_Quality.sh` script runs [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) on the command line on a series of samples organized in a project directory for quality control. Our recommendation is using this both before and after quality trimming and before read mapping. This script is designed to be run using the [Portable Batch System](http://www.pbsworks.com/).
 
 ### Quality\_Trimming.sh
+
 The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](https://github.com/morrelllab.seqqs) repository on GitHub) on a series of samples organized in a project directory.. In addition to requiring _Seqqs_ to be installed, this also requires [GNU Parallel](http://www.gnu.org/software/parallel/) to be installed on the system. This script is set up to be run using the [Portable Batch System](http://www.pbsworks.com/).
 
 
-### Read\_Mapping.sh
-~~The `Read_Mapping.sh` script uses [BWA](http://bio-bwa.sourceforge.net/) to read map a series of sequences. These scripts are both designed to use the results from `Quality_Trimming.sh` for the read mapping. Both scripts find files organized into a project directory and automatically sort them by sample. `QSub_Read_Mapping_Parallel.sh` uses [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run the read mapping for each sample in parallel. This script designed to be run using the Portable Batch System.~~
+### ~~Read\_Mapping.sh~~
 
-~~*NOTE: This script has memory issues, use with caution*~~
+**NOTE: This script is being redesigned and replaced with `read_mapping_start.sh`, please use that script for read mapping**
 
-**NOTE: This script is being redesigned. The original version will be pulled soon and replaced with a new script.**
+Due to parallelization issues with BWA, this script has been converted to a *Shell Script*. This is still dependent on [GNU Parallel](http://www.gnu.org/software/parallel/) and the [Portable Batch System](http://www.pbsworks.com/). Read above for more details.
 
 ### Coverage\_Map.sh
+
 The `Coverage_Map.sh` script generates coverage maps from BAM files using [_BEDTools_](http://bedtools.readthedocs.org/en/latest/) and [_R_](http://www.htslib.org/).
 
 **NOTE: This script has not been tested, use with caution**

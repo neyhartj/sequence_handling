@@ -66,9 +66,12 @@ case "$1" in
             mkdir -p "${SCRATCH}"
             bwa "${SETTINGS}" "${REF_GEN}" "$1" "$2" > "${SCRATCH}"/"$3"_"${YMD}".sam
         }
+        export map
         # generate a series of QSub submissions per script
+        QUE_SETTINGS="-l mem=8gb,nodes=1:ppn=8,walltime=12:00:00 -m abe -M ${EMAIL}"
         module load parallel
-        parallel --xapply "map {1} {2} {3} | echo" :::: $FWD_FILE :::: $REV_FILE :::: $SAMPLE_NAMES
+        echo parallel --xapply map {1} {2} {3} :::: "$FWD_FILE" :::: "$REV_FILE" :::: "$SAMPLE_NAMES" | \
+        qsub "${QUE_SETTINGS}"
         ;;
     "index" )
         module load bwa
