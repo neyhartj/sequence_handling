@@ -4,14 +4,23 @@ set -e
 set -u
 set -o pipefail
 
-module load parallel
-
 #   This script generates a series of QSub submissions for read mapping
 
 usage() {
     echo -e "\
-Usage:
-" >&2
+Usage: ./read_mapping_start.sh map scratch ref_gen sample_info email
+where:  scratch is the output directory for the read mapping \n\
+\n\
+        ref_gen is the reference genome for the read mapping \n\
+\n\
+        sample_info is the list of FASTQ files to be read mapped \n\
+\n\
+        email is the email address at which you can be notified of the progress of the read mapping \n\
+\n\
+Read mapping requires an index of the reference genome to be made \n\
+To do this, run: \n\
+       ./read_mapping_start.sh index ref_gen \n\
+where:  ref_gen is the reference genome to be indexed \n" >&2
     exit 1
 }
 
@@ -21,10 +30,13 @@ fi
 
 case "$1" in
     "map" )
+        if [ "$#" -lt 5 ]; then
+            usage;
+        fi
         SCRATCH="$2"
-        PROJECT="$3"
-        REF_GEN="$4"
-        SAMPLE_INFO="$5"
+        REF_GEN="$3"
+        SAMPLE_INFO="$4"
+        EMAIL="$5"
         SETTINGS="mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1"
         #   Generate lists of forward and reverse reads that match
         FWD="_R1_trimmed.fq.gz"
@@ -50,10 +62,11 @@ case "$1" in
         #   Define mapping function
         map() {
             module load bwa
-            mkdir -p "${SCRATCH}"/"${PROJECT}"
-            bwa "${SETTINGS}" "${REF_GEN}" "$1" "$2" > "${SCRATCH}"/"${PROJECT}"/"$3"_"${PROJECT}"_"${YMD}".sam
+            mkdir -p "${SCRATCH}"
+            bwa "${SETTINGS}" "${REF_GEN}" "$1" "$2" > "${SCRATCH}"/"$3"_"${YMD}".sam
         }
         # generate a series of QSub submissions per script
+        module load parallel
         echo "parallel --xapply map {1} {2} {3} :::: $FWD_FILE :::: $REV_FILE :::: $SAMPLE_NAMES"
         ;;
     "index" )
