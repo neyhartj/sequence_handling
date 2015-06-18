@@ -57,6 +57,7 @@ case "$1" in
             s=`head -"$i" "$FWD_FILE" | tail -1`
             basename "$s" "$FWD" >> "${SCRATCH}"/samples.txt
         done
+        SAMPLE_NAMES=${SCRATCH}/samples.txt
         #   Date in international format
         YMD=`date +%Y-%m-%d`
         #   Define mapping function
