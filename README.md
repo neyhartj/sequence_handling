@@ -74,9 +74,11 @@ The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](
 
 
 ### Read\_Mapping.sh
-The `Read_Mapping.sh` script uses [BWA](http://bio-bwa.sourceforge.net/) to read map a series of sequences. These scripts are both designed to use the results from `Quality_Trimming.sh` for the read mapping. Both scripts find files organized into a project directory and automatically sort them by sample. `QSub_Read_Mapping_Parallel.sh` uses [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run the read mapping for each sample in parallel. This script designed to be run using the Portable Batch System.
+~~The `Read_Mapping.sh` script uses [BWA](http://bio-bwa.sourceforge.net/) to read map a series of sequences. These scripts are both designed to use the results from `Quality_Trimming.sh` for the read mapping. Both scripts find files organized into a project directory and automatically sort them by sample. `QSub_Read_Mapping_Parallel.sh` uses [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run the read mapping for each sample in parallel. This script designed to be run using the Portable Batch System.~~
 
-**NOTE: This script has memory issues, use with caution**
+~~*NOTE: This script has memory issues, use with caution*~~
+
+**NOTE: This script is being redesigned. The original version will be pulled soon and replaced with a new script.**
 
 ### Coverage\_Map.sh
 The `Coverage_Map.sh` script generates coverage maps from BAM files using [_BEDTools_](http://bedtools.readthedocs.org/en/latest/) and [_R_](http://www.htslib.org/).
@@ -87,7 +89,7 @@ ___
 
  - ~~Generalize `read_counts.sh` for any project.~~ DONE!
  - Add better list-out methods
- - Fix memory issues with `Read_Mapping.sh`
+ - ~~Fix memory issues with `Read_Mapping.sh`~~ Redesign read mapping scripts
  -  ~~Add coverage map script to workflow~~ Finish integrating `Coverage_Map.sh` with the rest of the pipeline
  -  Add script to easily convert SAM files from `Read_Mapping.sh` to BAM files for `Coverage_Map.sh`
  - keep README updated
