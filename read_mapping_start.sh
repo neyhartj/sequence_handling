@@ -17,10 +17,37 @@ where:  scratch is the output directory for the read mapping \n\
 \n\
         email is the email address at which you can be notified of the progress of the read mapping \n\
 \n\
+This uses the Burrow-Wheeler Aligner's (BWA) 'mem' algorithim with the following settings: \n\
+    -t 8: Use 8 threads \n\
+    -k 10: Seed length 25 \n\
+    -r 1.0: Re-seed if match is greater than 1.0 * seed length \n\
+    -M : mark split hits as secondary \n\
+    -T 85: only output alignments greater than score 85 \n\
+    -O 8: Gap open penalty \n\
+    -E 1: Gap extension penalty \n\
+\n\
+By default, this script looks for forward and reverse samples starting ending with: \n\
+    '_R1_trimmed.fq.gz' for forward and \n\
+    '_R2_trimmed.fq.gz' for reverse \n\
+\n\
+This will generate a series of QSub submissions with the following settings: \n\
+    8 GB memory \n\
+    1 node \n\
+    8 processor per node \n\
+    16 hours walltime \n\
+\n\
+To change these default settings, open this file in your favourite text editor \n\
+and edit lines 67, 69, 73, and 74 \n\
+-------------------------------------------------------------------------------\n\
 Read mapping requires an index of the reference genome to be made \n\
 To do this, run: \n\
        ./read_mapping_start.sh index ref_gen \n\
-where:  ref_gen is the reference genome to be indexed \n" >&2
+where:  ref_gen is the reference genome to be indexed \n
+\n\
+This index process will be done in the same directory \n\
+where the reference genome is stored, please make sure you have \n\
+appropriate permissions for said directory\n\
+" >&2
     exit 1
 }
 
@@ -37,7 +64,9 @@ case "$1" in
         REF_GEN="$3"
         SAMPLE_INFO="$4"
         EMAIL="$5"
-        SETTINGS="mem -t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1"
+        SETTINGS='-t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1'
+        YMD=`date +%Y-%m-%d`
+        QUE_SETTINGS='-l mem=8gb,nodes=1:ppn=8,walltime=16:00:00'
         #   Create scratch directory if it doesn't exist
         mkdir -p ${SCRATCH}
         #   Generate lists of forward and reverse reads that match
@@ -53,26 +82,14 @@ case "$1" in
         else
             exit 1
         fi
-        #   Create a list of sample names only
+        #   Start a series of QSub submissions to run BWA
         for i in `seq $(wc -l < $FWD_FILE)`
         do
-            s=`head -"$i" "$FWD_FILE" | tail -1`
-            basename "$s" "$FWD" >> "${SCRATCH}"/samples.txt
+            f=`head -"$i" "$FWD_FILE" | tail -1`
+            r=`head -"$i" "$REV_FILE" | tail -1`
+            s=`basename "$f" "$FWD"`
+            echo "module load bwa && bwa mem ${SETTINGS} ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}"
         done
-        SAMPLE_NAMES=${SCRATCH}/samples.txt
-        #   Date in international format
-        YMD=`date +%Y-%m-%d`
-        #   Define mapping function
-        map() {
-            module load bwa
-            mkdir -p "${SCRATCH}"
-            bwa "${SETTINGS}" "${REF_GEN}" "$1" "$2" > "${SCRATCH}"/"$3"_"${YMD}".sam
-        }
-        export map
-        # generate a series of QSub submissions per script
-        QUE_SETTINGS="-l mem=8gb,nodes=1:ppn=8,walltime=12:00:00 -m abe -M ${EMAIL}"
-        module load parallel
-        parallel --xapply echo "echo ${SETTINGS} ${REF_GEN} {1} {2} > ${SCRATCH}/{3}_${YMD} | qsub ${QUE_SETTINGS} -m abe -M ${EMAIL}" :::: "$FWD_FILE" :::: "$REV_FILE" :::: "$SAMPLE_NAMES"
         ;;
     "index" )
         module load bwa

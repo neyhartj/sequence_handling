@@ -66,7 +66,7 @@ The `sample_list_generator.sh` script creates a list of samples using a director
 
 ### read\_mapping\_start.sh
 
-The `read_mapping_start.sh` script generates a series of QSub submissions for use with the [Portable Batch System](http://www.pbsworks.com/) on MSI's resources. It uses [GNU Parallel](http://www.gnu.org/software/parallel/) to start a series of [BWA](http://bio-bwa.sourceforge.net/) sessions to map reads back to a reference genome.
+The `read_mapping_start.sh` script generates a series of QSub submissions for use with the [Portable Batch System](http://www.pbsworks.com/) on MSI's resources. starts a series of [BWA](http://bio-bwa.sourceforge.net/) sessions to map reads back to a reference genome.
 ___
 
 ## Batch Submission Scripts
