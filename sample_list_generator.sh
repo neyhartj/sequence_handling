@@ -13,9 +13,9 @@ usage() {
 Usage: ./sample_list_generator.sh file_ext reads_dir out_dir out_name \n\
 where:  file_ext is the extenstion of samples being found \n\
             example: \n\
-                .fastq.gz \n\
                 .txt.gz \n\
                 .fq.gz \n\
+                .sam \n\
 \n\
         reads_dir is the directory in which all samples or \n\
             root directory for subdirectories containing samples \n\

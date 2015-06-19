@@ -59,28 +59,24 @@ SCRATCH=
 #       This is the reference .bed or .gff file
 REF_ANN=
 
+#   Other variables, don't need to be user-specified
 DATE=`date +%Y-%m-%d`
+mkdir -p ${SCRATCH}/${PROJECT}
 
 #   List of sample names
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
     s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
-    basename "$s" .bam >> "${SCRATCH}"/sample_names.txt
+    basename "$s" .bam >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
 done
 
-SAMPLES=${SCRATCH}/sample_names.txt
+SAMPLES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 
-#   check if R is installed and in the path
-if `command -v Rscript > /dev/null 2> /dev/null`
-    then 
-        echo "R is installed, OK"
-    else
-        echo "You need R (Rscript) to be installed and in your \$PATH"
-        exit 1
-fi
+#   Do the work here
+cd ${SCRATCH}/${PROJECT}
+parallel --xapply "bedtools coverage -hist -abam {1} -b ${REF_ANN} > ${SCRATCH}/${PROJECT}/Sample_{2}_${PROJECT}_${DATE}.coverage.hist.txt" :::: ${SAMPLE_INFO} :::: ${SAMPLES}
 
-cd $SCRATCH
-
-cat ${SAMPLES} | parallel "mkdir {} "
-
-parallel -- xapply "bedtools coverage -hist -abam {1} -b ${REF_ANN} > {2}/Sample_{2}_${PROJECT}_${DATE}.coverage.hist.txt" :::: ${SAMPLE_INFO} :::: ${SAMPLES}
+#   Make an output list for use with
+find ${SCRATCH}/${PROJECT} -name "*.coverage.hist.txt" | sort > ${SCRATCH}/${PROJECT}/${PROJECT}_samples_coverage.txt
+echo "List of samples for  can be found at"
+echo "${SCRATCH}/${PROJECT}/${PROJECT}_samples_coverage.txt"
