@@ -39,10 +39,7 @@ OUTDIR=
 
 #   Specify path to Bioawk installation
 #   This is not a path to Bioawk itself
-bioawk=${HOME}/Apps/HLi/bioawk
-
-#   Change to working directory
-cd "${WORKING}"
+bioawk=
 
 #   Truncate sample info file into output file name
 outfile=$(basename $sample_info .txt)
