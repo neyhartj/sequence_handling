@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#PBS -l mem 4gb,nodes=1:ppn=8,walltime=4:00:00
+#PBS -l mem=4gb,nodes=1:ppn=8,walltime=4:00:00
 #PBS -m abe
-#PBS -m user@example.com
+#PBS -M user@example.com
 #PBS -q lab
 
 set -e

@@ -29,13 +29,16 @@ frac <- paste('Fraction of', typelist, 'at depth')
 output <- paste0(outdir, 'outplot_', typelist, '.pdf')
 
 pdf(file = output[1], width = 6, height = 6)
+options(scipen=5)
 plot(cov[1:51,2], cov[1:51,5], type='h', col='blue', lwd=5, xlab = lab, ylab = frac[1])
 dev.off()
 
 pdf(file = output[2], width = 6, height = 6)
+options(scipen=5)
 plot(ecov[1:101, 10], ecov[1:101, 13], type = 'h', col = 'green' , lwd = 5, xlab = lab, ylab = frac[2])
 dev.off()
 
 pdf(file = output[3], width = 6, height = 6)
+options(scipen=5)
 plot(gcov[1:101, 10], gcov[1:101, 13], type = 'h', col = 'red' , lwd = 5, xlab = lab, ylab = frac[3]))
 dev.off()
