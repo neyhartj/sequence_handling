@@ -46,9 +46,11 @@ SCRATCH=
 #   Name of project
 PROJECT=
 
+mkdir -p ${SCRATCH}/${PROJECT}
+
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
-    s=`head "$i" "${SAMPLE_INFO}" | tail -1`
+    s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
     basename "$s" .sam >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
 done
 
