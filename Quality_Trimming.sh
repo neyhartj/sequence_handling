@@ -11,7 +11,7 @@ set -o pipefail
 
 module load parallel
 
-#   This script is a qsub submission for quality trimming a batch of files.
+#   This script is a QSub submission for quality trimming a batch of files.
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
 #   Place the full directory path to your Seqqs installation on line 54
