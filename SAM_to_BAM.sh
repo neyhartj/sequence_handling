@@ -46,8 +46,10 @@ SCRATCH=
 #   Name of project
 PROJECT=
 
+#   Make the outdirectory
 mkdir -p ${SCRATCH}/${PROJECT}
 
+#   Generate a list of sample names
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
     s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
@@ -58,8 +60,10 @@ SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 
 DATE=`date +%Y-%m-%d`
 
+#   Create a sorted BAM file for each input SAM file in parallel
 parallel --xapply "samtools view -bS {1} | samtools sort - ${SCRATCH}/${PROJECT}/{2}_${DATE}.bam" :::: ${SAMPLE_INFO} :::: ${SAMPLE_NAMES}
 
+#   Make a list of BAM files
 find ${SCRATCH}/${PROJECT} -name "*.bam" | sort > ${SCRATCH}/${PROJECT}/${PROJECT}_bam_files.txt
 echo "List of BAM files can be found at"
 echo "${SCRATCH}/${PROJECT}/${PROJECT}_bam_files.txt"

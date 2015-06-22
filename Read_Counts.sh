@@ -61,7 +61,7 @@ echo ${sample_names[*]}
 for sample in ${sample_names[*]}
     do
     		count="$(bioawk -cfastx 'END{print NR}' $sample)"
-    		printf %s"$sample \t $count \n"  >>./${outfile}_out.txt
+    		printf %s"$sample \t $count \n" >> ./${outfile}_out.txt
     done
 
 echo Results can be found at "${OUTDIR}"/"$outfile"_out.txt
