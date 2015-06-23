@@ -41,15 +41,16 @@ This workflow requires the following dependencies:
  - [_Sickle_](https://github.com/vsbuffalo/sickle)
  - [_Scythe_](https://github.com/vsbuffalo/scythe)
  - [_Bioawk_](https://github.com/lh3/bioawk)
- - [_Samtools_](http://www.htslib.org/)
- - [_R_](http://www.htslib.org/)
+ - [_SAMTools_](http://www.htslib.org/)
+ - [_R_](http://cran.r-project.org/)
+ - [_Picard Tools_](http://broadinstitute.github.io/picard/)
  - [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
  - [_The Burrows-Wheeler Aligner_](http://bio-bwa.sourceforge.net/) (BWA)
  - [_GNU Parallel_](http://www.gnu.org/software/parallel/)
 
-When running these scripts on the Minnesota Supercomputing Institute's (MSI) resources, _R_, _FastQC_, BWA, and _GNU Parallel_ are already loaded into the scripts; the only tools need to be downloaded and installed seperately are _Seqqs_, _Sickle_, _Scythe_, _Bioawk_, and _Samtools_.
+When running these scripts on the Minnesota Supercomputing Institute's (MSI) resources, _R_, _FastQC_, _Picard Tools_, _SAMTools_, BWA, and _GNU Parallel_ are already loaded into the scripts; the only tools need to be downloaded and installed seperately are _Seqqs_, _Sickle_, _Scythe_, and _Bioawk_.
 
-If not running on MSI's resources, all of these dependencies except for _FastQC_, BWA, and _GNU Parallel_ can be installed using `installer.sh`
+If not running on MSI's resources, all of these dependencies except for _FastQC_, BWA, _Picard Tools_, and _GNU Parallel_ can be installed using `installer.sh`
 ___
 
 ## Shell Scripts
@@ -58,7 +59,7 @@ ___
 
 ### installer.sh
 
-The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. It also has options for installing [_Bioawk_](https://github.com/lh3/bioawk), [_Samtools_](http://www.htslib.org/) and [_R_](http://www.htslib.org/), all dependencies for various scripts within this package.
+The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. It also has options for installing [_Bioawk_](https://github.com/lh3/bioawk), [_SAMTools_](http://www.htslib.org/) and [_R_](http://cran.r-project.org/), all dependencies for various scripts within this package.
 
 ### sample\_list\_generator.sh
 
@@ -95,9 +96,15 @@ Due to parallelization issues with BWA, this script has been converted to a *She
 
 ### Coverage\_Map.sh
 
-The `Coverage_Map.sh` script generates coverage maps from BAM files using [_BEDTools_](http://bedtools.readthedocs.org/en/latest/) and [_R_](http://www.htslib.org/).
+The `Coverage_Map.sh` script generates coverage maps from BAM files using [_BEDTools_](http://bedtools.readthedocs.org/en/latest/) and [_R_](http://cran.r-project.org/).
 
 **NOTE: This script has not been tested, use with caution**
+
+### SAM\_to\_BAM.sh
+
+### Deduplication.sh
+
+The `Deduplication.sh` script processess and de-duplicates the SAM files generated from the `read_mapping_start.sh` script. This uses [_Samtools_](http://www.htslib.org/) and [_Picard Tools_](http://broadinstitute.github.io/picard/)
 ___
 ## TODO
 
