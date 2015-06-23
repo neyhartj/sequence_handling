@@ -88,6 +88,7 @@ else
 fi
 
 #   Create lists of forward and reverse samples
+mkdir -p ${OUTDIR}
 grep -E "$FORWARD_NAMING" $SAMPLE_INFO > ${OUTDIR}/forward.txt
 FORWARD_SAMPLES=${OUTDIR}/forward.txt
 grep -E "$REVERSE_NAMING" $SAMPLE_INFO > ${OUTDIR}/reverse.txt
