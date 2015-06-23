@@ -64,15 +64,19 @@ The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs
 
 The `sample_list_generator.sh` script creates a list of samples using a directory tree for its searching. This will find **all** samples in a given directory and its subdirectories. Only use this if you are using all samples within a directory tree. Running it with no arguments will give a detailed usage message, or one can edit the script to have variables hard-coded. `sample_list_generator.sh` is designed to be run from the command line directly.
 
+## read\_counts.sh
+
+The `read_counts.sh` script calls [_Bioawk_](https://github.com/lh3/bioawk) to get accurate counts for read number for a list of samples. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples.
+
 ### read\_mapping\_start.sh
 
 The `read_mapping_start.sh` script generates a series of QSub submissions for use with the [Portable Batch System](http://www.pbsworks.com/) on MSI's resources. starts a series of [BWA](http://bio-bwa.sourceforge.net/) sessions to map reads back to a reference genome.
 ___
 
 ## Batch Submission Scripts
-### Read_Counts.sh
+### ~~Read_Counts.sh~~
 
-The `Read_Counts.sh` script calls [_Bioawk_](https://github.com/lh3/bioawk) to get accurate counts for read number for a list of samples. The sample list is currently hard-coded into the script to permit qsub job submission. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples. This script is designed to be run using the [Portable Batch System](http://www.pbsworks.com/).
+**NOTE: This script has been converted to a shell script. See `read_counts.sh` above.**
 
 ### Assess_Quality.sh
 
@@ -99,7 +103,7 @@ ___
 
  - ~~Generalize `read_counts.sh` for any project.~~ DONE!
  - Add better list-out methods
- - ~~Fix memory issues with `Read_Mapping.sh`~~ Redesign read mapping scripts
+ - ~~Fix memory issues with `Read_Mapping.sh`~~ ~~Redesign read mapping scripts~~ DONE!
  -  ~~Add coverage map script to workflow~~ Finish integrating `Coverage_Map.sh` with the rest of the pipeline
- -  Add script to easily convert SAM files from `Read_Mapping.sh` to BAM files for `Coverage_Map.sh`
+ - Add script to easily convert SAM files from `Read_Mapping.sh` to BAM files for `Coverage_Map.sh`
  - keep README updated
