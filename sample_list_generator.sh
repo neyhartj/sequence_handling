@@ -51,4 +51,4 @@ READS_DIR="$2"
 OUT_DIR="$3"
 OUT_NAME="$4"
 
-find "$READS_DIR" -name "*$FILE_EXT" > ${OUT_DIR}/${OUT_NAME}
+find "$READS_DIR" -name "*$FILE_EXT" | sort > ${OUT_DIR}/${OUT_NAME}
