@@ -1,10 +1,5 @@
 #!/bin/env bash
 
-#PBS -l mem=2000mb,nodes=1:ppn=1,walltime=8:00:00
-#PBS -m abe 
-#PBS -M user@example.com
-#PBS -q lab
-
 set -e
 set -u
 set -o pipefail
@@ -24,22 +19,37 @@ set -o pipefail
 #   Run this script using the qsub command
 #       qsub Read_Counts.sh
 #   This script outputs text file with the read depths
+usage() {
+    echo -e "\
+Usage: ./read_counts.sh sample_info outdirectory \n\
+where:  sample info is a list of samples, with full file paths to have their depths read \n\
+\n\
+        outdirectory is the directory where the final text file should be placed \n\
+" >&2
+    exit 1
+}
 
+
+if [ "$#" -lt 2 ]; then
+    usage;
+fi
 
 #   List of samples to be processed
-#   Need to hard code the file path for qsub jobs
-sample_info=
-
-#   Specify path to directory where reads are stored
-#   Not needed
-#WORKING=${HOME}/scratch/SCN/rename
+sample_info=$1
 
 #   Specify path to outdirectory
-OUTDIR=
+OUTDIR=$2
 
-#   Specify path to Bioawk installation
-#   This is not a path to Bioawk itself
-bioawk=
+#   Check to see if bioawk is installed
+if `command -v bioawk > /dev/null 2> /dev/null`
+then
+    echo "Bioawk is installed"
+else
+    echo "Please install Bioawk and add it to your PATH"
+    echo
+    echo "Running 'installer.sh bioawk' will do this"
+    exit 1 
+fi
 
 #   Truncate sample info file into output file name
 outfile=$(basename $sample_info .txt)
