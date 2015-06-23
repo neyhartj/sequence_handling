@@ -22,7 +22,7 @@ set -o pipefail
 usage() {
     echo -e "\
 Usage: ./read_counts.sh sample_info outdirectory \n\
-where:  sample info is a list of samples, with full file paths to have their depths read \n\
+where:  sample info is a list of samples to be processed \n\
 \n\
         outdirectory is the directory where the final text file should be placed \n\
 " >&2
