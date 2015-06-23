@@ -108,7 +108,7 @@ case "$1" in
             cd software
             SOFT=`pwd`
         fi
-        if `command -v bioawk > dev/null 2> dev/null`
+        if `command -v bioawk > /dev/null 2> /dev/null`
         then
             echo "Bioawk is installed"
         else
@@ -133,7 +133,7 @@ case "$1" in
             cd software
             SOFT=`pwd`
         fi
-        if `command -v samtools > /dev/null 2> dev/null`
+        if `command -v samtools > /dev/null 2> /dev/null`
         then
             echo "sammtools is installed"
         else
