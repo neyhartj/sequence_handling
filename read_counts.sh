@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/bash
 
 set -e
 set -u
@@ -22,9 +22,9 @@ set -o pipefail
 usage() {
     echo -e "\
 Usage: ./read_counts.sh sample_info outdirectory \n\
-where:  sample info is a list of samples to be processed \n\
+where:  sample_info is a list of samples to be processed \n\
 \n\
-        outdirectory is the directory where the final text file should be placed \n\
+        outdirectory is the directory where the file should be placed \n\
 " >&2
     exit 1
 }
