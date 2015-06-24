@@ -5,8 +5,8 @@ set -u
 set -o pipefail
 
 #   This script generates a series of QSub submissions for read mapping
-#   The Burrows-Wheeler Aligner (BWA), the Portable Batch System (PBS)
-#   and GNU Parallel are required to use this script
+#   The Burrows-Wheeler Aligner (BWA) and the Portable Batch System (PBS)
+#   are required to use this script
 
 usage() {
     echo -e "\
@@ -43,8 +43,10 @@ and edit lines 67, 69, 73, and 74 \n\
 -------------------------------------------------------------------------------\n\
 Read mapping requires an index of the reference genome to be made \n\
 To do this, run: \n\
-       ./read_mapping_start.sh index ref_gen \n\
+       ./read_mapping_start.sh index ref_gen email \n\
 where:  ref_gen is the reference genome to be indexed \n
+\n\
+        email is the email address at which you can be notified of the progress of the read mapping \n\
 \n\
 This index process will be done in the same directory \n\
 where the reference genome is stored, please make sure you have \n\
@@ -57,6 +59,8 @@ if [ "$#" -lt 1 ]; then
     usage;
 fi
 
+QUE_SETTINGS='-l mem=8gb,nodes=1:ppn=8,walltime=16:00:00'
+
 case "$1" in
     "map" )
         if [ "$#" -lt 5 ]; then
@@ -68,7 +72,6 @@ case "$1" in
         EMAIL="$5"
         SETTINGS='-t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1'
         YMD=`date +%Y-%m-%d`
-        QUE_SETTINGS='-l mem=8gb,nodes=1:ppn=8,walltime=16:00:00'
         #   Create scratch directory if it doesn't exist
         mkdir -p ${SCRATCH}
         #   Generate lists of forward and reverse reads that match
@@ -94,9 +97,13 @@ case "$1" in
         done
         ;;
     "index" )
+        if [ "$#" -lt 5]; then
+            usage;
+        fi
         module load bwa
         REF_GEN="$2"
-        bwa index "${REF_GEN}"
+        EMAIL="$3"
+        echo "module load && bwa index ${REF_GEN}" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}"
         ;;
     * )
         usage
