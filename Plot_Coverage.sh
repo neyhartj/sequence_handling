@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#PBS -l mem 8gb,nodes=1:ppn=8,walltime=8:00:00
+#PBS -l mem=8gb,nodes=1:ppn=8,walltime=8:00:00
 #PBS -m abe
-#PBS -m user@example.com
+#PBS -M user@example.com
 #PBS -q lab
 
 set -e
@@ -40,15 +40,14 @@ fi
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
     s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
-    name=`basename "$s" .coverage.hist.txt` 
-    name >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
+    name="`basename $s .coverage.hist.txt`" 
+    echo "${name}" >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
     grep 'all' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
     GENOME="${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
     grep 'exon' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
     EXON="${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
     grep 'gene' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
     GENE="${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
-    
 done
 
 find "${SCRATCH}"/"${PROJECT}" -name "*_genome.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_genomes.txt
@@ -61,4 +60,4 @@ ALL_GENES="${SCRATCH}"/"${PROJECT}"/all_genes.txt
 SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 OUTDIR="${SCRATCH}/${PROJECT}/"
 
-parallel --xapply Rscript ${PLOT_COV} ${ALL_GENOMES} ${ALL_EXONS} ${ALL_GENES} ${OUTDIR}
+parallel --xapply Rscript ${PLOT_COV} {1} {2} {3} {4} :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} :::: ${OUTDIR}

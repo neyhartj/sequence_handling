@@ -1,12 +1,15 @@
 #!/bin/bash
 
-#set -e
-#set -u
-#set -o pipefail
+set -e
+set -u
+set -o pipefail
 
 #   This script installs Sickle, Seqqs, and Scythe
 #   from GitHub. No GitHub account is required for
 #   this installation to occur
+
+#   This also can install other dependencies required
+#   by other programs in this repository
 
 
 #   Create a software directory for these three programs in home directory

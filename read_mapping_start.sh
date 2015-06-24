@@ -5,6 +5,8 @@ set -u
 set -o pipefail
 
 #   This script generates a series of QSub submissions for read mapping
+#   The Burrows-Wheeler Aligner (BWA), the Portable Batch System (PBS)
+#   and GNU Parallel are required to use this script
 
 usage() {
     echo -e "\
@@ -17,7 +19,7 @@ where:  scratch is the output directory for the read mapping \n\
 \n\
         email is the email address at which you can be notified of the progress of the read mapping \n\
 \n\
-This uses the Burrow-Wheeler Aligner's (BWA) 'mem' algorithim with the following settings: \n\
+This uses the Burrows-Wheeler Aligner's (BWA) 'mem' algorithim with the following settings: \n\
     -t 8: Use 8 threads \n\
     -k 10: Seed length 25 \n\
     -r 1.0: Re-seed if match is greater than 1.0 * seed length \n\
