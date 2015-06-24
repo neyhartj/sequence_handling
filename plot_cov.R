@@ -30,7 +30,7 @@ output <- paste0(outdir, 'outplot_', typelist, '.pdf')
 
 pdf(file = output[1], width = 6, height = 6)
 options(scipen=5)
-plot(cov[1:51,2], cov[1:51,5], type='h', col='blue', lwd=5, xlab = lab, ylab = frac[1], xlim = c(0, max(cov[1:51,2])))
+plot(cov[1:51, 2], cov[1:51, 5], type='h', col='blue', lwd=5, xlab = lab, ylab = frac[1], xlim = c(0, max(cov[1:51, 2])))
 dev.off()
 
 pdf(file = output[2], width = 6, height = 6)

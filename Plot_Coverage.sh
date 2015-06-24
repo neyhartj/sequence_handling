@@ -11,6 +11,10 @@ set -o pipefail
 
 module load parallel
 
+#   This script is a QSub submission script for generating plots based off coverage maps
+#   To use, on line 5, change the 'user@example.com' to your own email address
+#       to get notifications on start and completion for this script
+
 #   List of text files for plotting
 SAMPLE_INFO=
 
@@ -60,4 +64,4 @@ ALL_GENES="${SCRATCH}"/"${PROJECT}"/all_genes.txt
 SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 OUTDIR="${SCRATCH}/${PROJECT}/"
 
-parallel --xapply Rscript ${PLOT_COV} {1} {2} {3} {4} :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} :::: ${OUTDIR}
+parallel --xapply Rscript ${PLOT_COV} {1} {2} {3} {4} :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} ::: ${OUTDIR}
