@@ -92,7 +92,7 @@ The `Assess_Quality.sh` script runs [_FastQC_](http://www.bioinformatics.babraha
 
 The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](https://github.com/morrelllab.seqqs) repository on GitHub) on a series of samples organized in a project directory.. In addition to requiring _Seqqs_ to be installed, this also requires [GNU Parallel](http://www.gnu.org/software/parallel/) to be installed on the system. This script is set up to be run using the [Portable Batch System](http://www.pbsworks.com/).
 
-**NOTE: A list of trimmed FastQ files is _NOT_ output by this script. To do so, change to your out directory and run `find \`pwd\` -regex ".*_R[1-2]_trimmed.fq.gz" | sort > samples_trimmed.txt` to get the list; work is being done to get this done automatically**
+**NOTE: A list of trimmed FastQ files is _NOT_ output by this script. To do so, change to your out directory and run ``find `pwd` -regex ".*_R[1-2]_trimmed.fq.gz" | sort > samples_trimmed.txt`` to get the list; work is being done to get this done automatically**
 
 ### ~~Read\_Mapping.sh~~
 
