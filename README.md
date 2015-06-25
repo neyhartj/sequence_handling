@@ -5,13 +5,15 @@ ___
 ## Introduction
 ### What is `sequence_handling` for?
 
-`sequence_handling` is a series of scripts to automate and speed up DNA sequence aligning and quality control through the use of our workflow outlined here. This repository contains two kinds of scripts: *Shell Scripts* and *Batch Submission Scripts*.
+`sequence_handling` is a series of scripts to automate and speed up DNA sequence aligning and quality control through the use of our workflow outlined here. This repository contains two general kinds of scripts: *Shell Scripts* and *Batch Submission Scripts*, with one exception.
 
-The former group is designed to be run directly from the command line. These serve as partial dependency installers, a way to generate a list for batch submission, and QSub starters. Running any of these scripts without any arguments generates a usage message for more details.
+The former group is designed to be run directly from the command line. These serve as partial dependency installers, a way to generate a list for batch submission, QSub starters, and others that have issues with either running in parallel or using the [Portable Batch System](http://www.pbsworks.com/). Running any of these scripts without any arguments generates a usage message for more details. Each script is named entirely in lower-case letters.
 
-The latter group is designed to run the workflow in batch and in parallel. They use a list of sequences, with full sequence paths, as their input and utilize [_GNU Parallel_](http://www.gnu.org/software/parallel/) to speed up the process. These are the scripts that will find the depth count of the reads, trim off adapter sequences, map the reads back to a reference genome, and run quality control checks along the way.
+The latter group is designed to run the workflow in batch and in parallel. These scripts use a list of sequences, with full sequence paths, as their input and utilize [_GNU Parallel_](http://www.gnu.org/software/parallel/) to speed up the analysis and work they are designed for. Due to the length of time and resources needed for these scripts to run, they are designed to be submitted to a job scheduler, specifically the [Portable Batch System](http://www.pbsworks.com/). Each script is named using capital and lower-case letters.
 
-> **NOTE:** the latter group of scripts and `read_mapping_start.sh` are designed to use the Portable Batch System and run on the [Minnesota Supercomputing Institute](https://www.msi.umn.edu) (MSI). Modifications will need to be made if not using these systems.
+Finally, there is one script that is neither designed to run directly from the shell nor submitted to a job scheduler. This script, `plot_cov.R` is designed to be called by `Plot_Coverage.sh` for creating coverage plots. This is done automatically; one does not need to change this script unless they wish to change the graphic parameters.
+
+> **NOTE:** the latter group of scripts and `read_mapping_start.sh` are designed to use the [Portable Batch System](http://www.pbsworks.com/) and run on the [Minnesota Supercomputing Institute](https://www.msi.umn.edu) (MSI). Modifications will need to be made if not using these systems.
 
 ### Why use list-based batch submission?
 
@@ -121,6 +123,14 @@ The `Plot_Coverage.sh` script creates plots using [_R_](http://cran.r-project.or
 The `Deduplication.sh` script processess and de-duplicates the SAM files generated from the `read_mapping_start.sh` script. This uses [_Samtools_](http://www.htslib.org/) and [_Picard Tools_](http://broadinstitute.github.io/picard/)
 
 **NOTE: This script has not been tested, use with caution**
+
+___
+
+## Other Scripts
+
+### plot\_cov.R
+
+The `plot_cov.R` script is the graphical brains behind the `Plot_Coverage.sh` script. The latter will automatically call upon the former to create the coverage plots based off coverage maps. One needs to neither open this script nor run it from the command line to generate coverage plots unless one has desires to change the graphical parameters.
 
 ___
 
