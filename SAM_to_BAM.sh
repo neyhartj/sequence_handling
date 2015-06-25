@@ -25,11 +25,14 @@ module load parallel
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #       Use ${HOME}, as it is a link that the shell understands as your home directory
 #           and the rest is the full path to the actual list of samples
-#   Put the full directory path for the output in the 'SCRATCH' field on line 44
+#   Define a path to a reference genome on line 47
+#       This should look like:
+   #        REF_GEN=${HOME}/Directory/reference_genome.fa
+#   Put the full directory path for the output in the 'SCRATCH' field on line 50
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
 #       Adjust for your own out directory.
-#   Name the project in the 'PROJECT' field on line 47
+#   Name the project in the 'PROJECT' field on line 53
 #       This should look lke:
 #           PROJECT=Genetics
 
@@ -40,6 +43,9 @@ module load samtools
 #   List of SAM files for conversion
 SAMPLE_INFO=
 
+#   Reference genome to help base the conversion off of
+REF_GEN=
+
 #   Scratch directory, for output
 SCRATCH=
 
@@ -47,7 +53,8 @@ SCRATCH=
 PROJECT=
 
 #   Make the outdirectory
-mkdir -p ${SCRATCH}/${PROJECT}
+#mkdir -p ${SCRATCH}/${PROJECT}
+mkdir -p ${SCRATCH}/${PROJECT}/stats
 
 #   Generate a list of sample names
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
@@ -61,7 +68,7 @@ SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 DATE=`date +%Y-%m-%d`
 
 #   Create a sorted BAM file for each input SAM file in parallel
-parallel --xapply "samtools view -bS {1} | samtools sort - ${SCRATCH}/${PROJECT}/{2}_${DATE}.bam" :::: ${SAMPLE_INFO} :::: ${SAMPLE_NAMES}
+parallel --xapply "samtools view -bT "${REF_GEN} {1} | samtools sort - - | tee >(samtools flagstat - > ${SCRATCH}/${PROJECT}/stats/{2}.out) > ${SCRATCH}/${PROJECT}/{2}_${DATE}.bam" :::: ${SAMPLE_INFO} :::: ${SAMPLE_NAMES}
 
 #   Make a list of BAM files
 find ${SCRATCH}/${PROJECT} -name "*.bam" | sort > ${SCRATCH}/${PROJECT}/${PROJECT}_bam_files.txt
