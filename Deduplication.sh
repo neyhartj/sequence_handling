@@ -107,7 +107,6 @@ dedup() {
     #	-f 3 gives us reads mapped in proper pair
     #	-F 256 excludes reads not in their primary alignments
     samtools view -f 3 -F 256 -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam
-    "${/.sam/_trimmed.bam}"
     #   Create alignment statistics for raw BAM files
     samtools flagstat "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_raw_stats.out
     #	Picard tools to sort and index
