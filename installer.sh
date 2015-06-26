@@ -31,17 +31,18 @@ with 'Quality_Trimming.sh' script. This script will spit out the path for the \n
 './installer.sh bioawk' installs 'Bioawk' from GitHub \n\
 for use with the 'read_counts.sh' script. \n\
 \n\
-'./installer.sh samtools' installs 'Samtools' from GitHub \n\
-for use with the 'Read_Mapping.sh' and 'Coverage_Map' scripts. \n\
+'./installer.sh samtools' installs 'SAMTools' from GitHub \n\
+for use with the 'Read_Mapping.sh', 'SAM_to_BAM.sh', and 'Coverage_Map' scripts. \n\
 \n\
 './installer.sh R' installs R from CRAN \n\
-for use with the 'Quality_Trimming.sh' script. \n\
+for use with the 'Quality_Trimming.sh' and 'Plot_Coverage.sh' scripts. \n\
 For those running on MSI, there is built-in loading of the R module. \n\
+NOTE: This requires 'wget' to be installed for fetching R from CRAN \n\
 \n\
 NOTE: Neither GNU Parallel nor the Burrows-Wheeler Aligner (BWA) \n\
 are installed using this script. \n\
 GNU Parallel is used in every script with capitals in the name. \n\
-BWA is used for the 'Read_Mapping.sh' script. \n\
+BWA is used for the 'read_mapping_start.sh' script. \n\
 If not using the Minnesota Supercomputing Institute's resources, \n\
 you will need to install these manually from their websites. \n\
 \n\
@@ -53,6 +54,7 @@ GNU Parallel:   http://www.gnu.org/software/parallel/
 
 case "$1" in
     "install" )
+        #   Create a software directory in the home directory
         ROOT="${HOME}"
         if [ -d "${ROOT}"/software ]; then
             cd "${ROOT}"/software
@@ -101,6 +103,7 @@ case "$1" in
         sleep 3
         ;;
     "bioawk" )
+        #   Create a software directory in the home directory
         ROOT=`pwd`
         if [ -d "${ROOT}"/software ]; then
             cd "${ROOT}"/software
@@ -111,10 +114,12 @@ case "$1" in
             cd software
             SOFT=`pwd`
         fi
+        #   Check to see if Bioawk is already installed
         if `command -v bioawk > /dev/null 2> /dev/null`
         then
             echo "Bioawk is installed"
         else
+            #   If not, download Bioawk from GitHub and install
             cd "${SOFT}"
             git clone https://github.com/lh3/bioawk.git
             cd bioawk
@@ -126,6 +131,7 @@ case "$1" in
         source "${HOME}"/.bash_profile
         ;;
     "samtools" )
+        #   Create a software directory in the home directory
         ROOT=`pwd`
         if [ -d "${ROOT}"/software ]; then
             cd "${ROOT}"/software
@@ -136,10 +142,12 @@ case "$1" in
             cd software
             SOFT=`pwd`
         fi
+        #   Check to see if SAMTools is already installed
         if `command -v samtools > /dev/null 2> /dev/null`
         then
             echo "sammtools is installed"
         else
+            #   If not, download SAMTools from GitHub and install
             cd "${SOFT}"
             git clone https://github.com/samtools/htslib.git
             cd htslib
@@ -160,6 +168,7 @@ case "$1" in
         source "${HOME}"/.bash_profile
         ;;
     "R" )
+        #   Create a software directory in the home directory
         ROOT=`pwd`
         if [ -d "${ROOT}"/software ]; then
             cd "${ROOT}"/software
@@ -170,12 +179,15 @@ case "$1" in
             cd software
             SOFT=`pwd`
         fi
+        #   Check to see if R is already installed
         if `command -v Rscript > /dev/null 2> /dev/null`
         then 
             echo "R is installed"
         else
+            #   If no R, check to see if wget is installed
             if `command -v wget > /dev/null 2> /dev/null`
             then
+                #   If no R, but yes wget, download R from CRAN and install
                 cd "${SOFT}"
                 wget --no-directories --progress=bar -r -A.tar.gz http://cran.r-project.org/
                 rm robots.txt
@@ -187,7 +199,9 @@ case "$1" in
                 R_DIR=`pwd`
                 echo export PATH='$PATH':"${R_DIR}" >> "${HOME}"/.bash_profile
             else
+                #   If neither R nor wget are installed, exit out
                 echo "Please install wget to your system for to install R using this script"
+                exit 1
             fi
         fi
         cd "${ROOT}"

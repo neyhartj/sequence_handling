@@ -41,6 +41,10 @@ if `command -v Rscript > /dev/null 2> /dev/null`
         exit 1
 fi
 
+#   Split the coverage map into a map for:
+#       the whole genome
+#       exons
+#       and genes
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
     s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
@@ -54,6 +58,7 @@ do
     GENE="${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
 done
 
+#   Create lists of all split maps
 find "${SCRATCH}"/"${PROJECT}" -name "*_genome.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_genomes.txt
 ALL_GENOMES="${SCRATCH}"/"${PROJECT}"/all_genomes.txt
 find "${SCRATCH}"/"${PROJECT}" -name "*_exon.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_exons.txt
@@ -61,7 +66,9 @@ ALL_EXONS="${SCRATCH}"/"${PROJECT}"/all_exons.txt
 find "${SCRATCH}"/"${PROJECT}" -name "*_gene.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_genes.txt
 ALL_GENES="${SCRATCH}"/"${PROJECT}"/all_genes.txt
 
+#   Final variable definitions
 SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 OUTDIR="${SCRATCH}/${PROJECT}/"
 
-parallel --xapply Rscript ${PLOT_COV} {1} {2} {3} {4} :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} ::: ${OUTDIR}
+#   Create the coverage plots in parallel
+parallel --xapply "Rscript ${PLOT_COV} {1} {2} {3} {4}" :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} ::: ${OUTDIR}

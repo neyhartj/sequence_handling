@@ -63,14 +63,18 @@ QUE_SETTINGS='-l mem=8gb,nodes=1:ppn=8,walltime=16:00:00'
 
 case "$1" in
     "map" )
+        #   Make sure there are enough arguments
         if [ "$#" -lt 5 ]; then
             usage;
         fi
+        #   Assign variables for running BWA mem
         SCRATCH="$2"
         REF_GEN="$3"
         SAMPLE_INFO="$4"
         EMAIL="$5"
+        #   BWA mem settings
         SETTINGS='-t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1'
+        #   Today's date
         YMD=`date +%Y-%m-%d`
         #   Create scratch directory if it doesn't exist
         mkdir -p ${SCRATCH}
@@ -83,7 +87,7 @@ case "$1" in
         REV_FILE=${SCRATCH}/rev.txt
         #   Check for equal numbers of forward and reverse reads
         if [ `wc -l < "$FWD_FILE"` = `wc -l < "$REV_FILE"` ]; then
-            echo Equal numbers of forwad and reverse reads
+            echo "Equal numbers of forwad and reverse reads"
         else
             exit 1
         fi
@@ -97,15 +101,18 @@ case "$1" in
         done
         ;;
     "index" )
-        if [ "$#" -lt 5]; then
+        #   Make sure there are enough arguments
+        if [ "$#" -lt 3]; then
             usage;
         fi
-        module load bwa
+        #   Assign variables for running BWA index
         REF_GEN="$2"
         EMAIL="$3"
+        #   Generate a QSub submission for BWA index
         echo "module load && bwa index ${REF_GEN}" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}"
         ;;
     * )
+        #   Anythin other than 'map' or 'index'
         usage
         ;;
 esac
