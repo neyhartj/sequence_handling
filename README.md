@@ -110,8 +110,6 @@ The `SAM_to_BAM.sh` script converts the SAM files from read mapping with [BWA](h
 
 The `Coverage_Map.sh` script generates coverage maps from BAM files using [_BEDTools_](http://bedtools.readthedocs.org/en/latest/) and [_R_](http://cran.r-project.org/). This map is in text format and is used for making coverage plots. In addition to generating coverage maps, this script will create a list of all the coverage maps generated for use in other scripts.
 
-**NOTE: This script has not been tested, use with caution**
-
 ### Plot\_Coverage.sh
 
 The `Plot_Coverage.sh` script creates plots using [_R_](http://cran.r-project.org/) based off of coverage maps. It will generate three plots: one showing coverage across the genome, one showing coverage across exons, and one showing coverage across genes. This script uses `plot_cov.R` to generate the plots.
@@ -139,10 +137,10 @@ ___
  - ~~Generalize `read_counts.sh` for any project.~~ DONE!
  - Add better list-out methods
  - ~~Fix memory issues with `Read_Mapping.sh`~~ ~~Redesign read mapping scripts~~ DONE!
- -  ~~Add coverage map script to workflow~~ Finish integrating `Coverage_Map.sh` with the rest of the pipeline
+ - ~~Add coverage map script to workflow~~ ~~Finish integrating `Coverage_Map.sh` with the rest of the pipeline~~ DONE!
  - Get `Plot_Coverage.sh` and `plot_cov.R` integrated into the pipeline
- - Add information about `plot_cov.R` to the README
- - ~~Add script to easily convert SAM files from `Read_Mapping.sh` to BAM files for `Coverage_Map.sh`~~ DONE!
- - Add Deduplication script
+ - ~~Add information about `plot_cov.R` to the README~~ DONE!
+ - ~~Add script to easily convert SAM files from `Read_Mapping.sh` to BAM files for `Coverage_Map.sh`~~ ~~DONE!~~ ish...
+ - ~~Add Deduplication script~~ Get `Deduplication.sh` working
  - Add read mapping statistics via `samtools flagstat`
  - keep README updated
