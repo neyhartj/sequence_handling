@@ -116,41 +116,41 @@ dedup() {
     #	Use Samtools to trim out the reads we don't care about
     #	-f 3 gives us reads mapped in proper pair
     #	-F 256 excludes reads not in their primary alignments
-    samtools view -f 3 -F 256 -bT "${REF_SEQN}" "${SAMFILE}" > "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam
+    echo "samtools view -f 3 -F 256 -bT ${REF_SEQN} ${SAMFILE} > ${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
     #   Create alignment statistics for raw BAM files
-    samtools flagstat "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_raw_stats.out
+    echo "samtools flagstat ${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam > ${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
     #	Picard tools to sort and index
-    java -Xmx15g -XX:MaxPermSize=10g -jar\
-        "${PICARD_SORT}" \
-        INPUT="${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam \
-        OUTPUT="${OUTDIR}"/sorted/"${SAMPLE_NAME}"_"${YMD}"_sorted.bam \
+    echo "java -Xmx15g -XX:MaxPermSize=10g -jar \
+        ${PICARD_SORT} \
+        INPUT=${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam \
+        OUTPUT=${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam \
         SORT_ORDER=coordinate \
-        CREATE_INDEX=true\
-        TMP_DIR="${HOME}"/Scratch/Picard_Tmp
+        CREATE_INDEX=true \
+        TMP_DIR=${HOME}/Scratch/Picard_Tmp"
     #	Then remove duplicates
-    java -Xmx15g -XX:MaxPermSize=10g -jar\
-        "${MARKDUPS}" \
-        INPUT="${OUTDIR}"/sorted/"${SAMPLE_NAME}"_"${YMD}"_sorted.bam \
-        OUTPUT="${OUTDIR}"/deduped/"${SAMPLE_NAME}"_"${YMD}"_deduplicated.bam \
-        METRICS_FILE="${OUTDIR}"/deduped/"${SAMPLE_NAME}"_"${YMD}"_Metrics.txt\
-        REMOVE_DUPLICATES=true\
-        CREATE_INDEX=true\
-        TMP_DIR="${HOME}"/Scratch/Picard_Tmp\
-        MAX_RECORDS_IN_RAM=50000
+    echo "java -Xmx15g -XX:MaxPermSize=10g -jar \
+        ${MARKDUPS} \
+        INPUT=${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam \
+        OUTPUT=${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_deduplicated.bam \
+        METRICS_FILE=${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_Metrics.txt \
+        REMOVE_DUPLICATES=true \
+        CREATE_INDEX=true \
+        TMP_DIR=${HOME}/Scratch/Picard_Tmp \
+        MAX_RECORDS_IN_RAM=50000"
     #   Then add read groups
-    java -Xmx15g -XX:MaxPermSize=10g -jar\
-        "${ADDRG}" \
-        INPUT="${OUTDIR}"/deduped/"${SAMPLE_NAME}"_"${YMD}"_deduplicated.bam \
-        OUTPUT="${OUTDIR}"/finished/"${SAMPLE_NAME}"_"${YMD}"_finished.bam \
-        RGID="${SAMPLE_NAME}"\
-        RGPL="${TYPE}"\
-        RGPU="${SAMPLE_NAME}"\
-        RGSM="${SAMPLE_NAME}"\
-        RGLB="${PROJ}"_"${SAMPLE_NAME}"\
-        TMP_DIR="${HOME}"/Scratch/Picard_Tmp\
-        CREATE_INDEX=True
+    echo "java -Xmx15g -XX:MaxPermSize=10g -jar \
+        ${ADDRG} \
+        INPUT=${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_deduplicated.bam \
+        OUTPUT=${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam \
+        RGID=${SAMPLE_NAME} \
+        RGPL=${TYPE} \
+        RGPU=${SAMPLE_NAME} \
+        RGSM=${SAMPLE_NAME} \
+        RGLB=${PROJ}_${SAMPLE_NAME} \
+        TMP_DIR=${HOME}/Scratch/Picard_Tmp \
+        CREATE_INDEX=True"
     #   Create alignment statistics for finished BAM files
-    samtools flagstat "${OUTDIR}"/finished/"${SAMPLE_NAME}"_"${YMD}"_finished.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_finished_stats.out
+    echo "samtools flagstat ${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam > ${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_finished_stats.out"
 }
 
 #   Export the function to be used by GNU parallel
