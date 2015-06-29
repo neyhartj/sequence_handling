@@ -44,3 +44,8 @@ module load fastqc
 #   Run FastQC in parallel
 mkdir -p ${OUT}
 cat ${SAMPLE_INFO} | parallel "fastqc {} -o ${OUT}"
+
+# Create a list of ZIP files for use in counting read depth
+find ${OUT} -name "*.zip" | sort > ${OUT}_FastQC_zipfiles.txt
+echo "List of ZIP files can be found at"
+echo "${OUT}_FastQC_zipfiles.txt"
