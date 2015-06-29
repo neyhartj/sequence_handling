@@ -1,9 +1,9 @@
 #!/bin/sh
 
-#PBS -l mem=16gb,nodes=1:ppn=1,walltime=36:00:00 
+#PBS -l mem=22gb,nodes=1:ppn=8,walltime=36:00:00 
 #PBS -m abe 
 #PBS -M user@example.com
-#PBS -q lab
+#PBS -q oc
 
 set -e
 set -u
@@ -14,43 +14,40 @@ module load parallel
 #   This script is a QSub submission script for converting a batch of SAM files to sorted and deduplicated BAM files
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notificaitons on start and completion of this script
-#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 51
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 48
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #       Use ${HOME}, as it is a link that the shell understands as your home directory
 #           and the rest is the full path to the actual list of samples
-#   Define a path to a reference genome on line 54
+#   Define a path to a reference genome on line 51
 #       This should look like:
    #        REF_GEN=${HOME}/Directory/reference_genome.fa
-#   Put the full directory path for the output in the 'SCRATCH' field on line 57
+#   Put the full directory path for the output in the 'SCRATCH' field on line 54
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
 #       Adjust for your own out directory.
-#   Name the project in the 'PROJECT' field on line 60
+#   Name the project in the 'PROJECT' field on line 57
 #       This should look lke:
 #           PROJECT=Genetics
-#   Define a path to the SAMTools in the 'SAMTOOLS' field on line 64
+#   Define a path to the SAMTools in the 'SAMTOOLS' field on line 61
 #       If using MSI, leave the definition as is to use their installation of SAMTools
 #       Otherwise, it should look like this:
 #           SAMTOOLS=${HOME}/software/samtools
-#       Please be sure to comment out (put a '#' symbol in front of) the 'module load samtools' on line 63
-#       And to uncomment (remove the '#' symbol) from the 'SAMTOOLS=' on line 64
-#   Define paths to the Picard utilites: SortSam, AddOrReplaceReadGroups, and MarkDuplicates on lines
-#       If using MSI, leave the definitions as is to use their installaitons
-#       Otherwise, it should look like this, using SortSam as an example:
-#           P_SORT="${HOME}/directory/picard/dist/picard.jar SortSam"
-#       Please note, the double quotation marks are necessary for this definition to work
-#       Plese be sure to comment out lines 68 through 70, 72, and 74
-#       And to uncoment lines 71, 73, and 75
-#   Set the sequencing platform on line 78
+#       Please be sure to comment out (put a '#' symbol in front of) the 'module load samtools' on line 60
+#       And to uncomment (remove the '#' symbol) from the 'SAMTOOLS=' on line 61
+#   Define paths to the Picard installation, but not to 'picard.jar' itself, on line 64
+#       If using MSI's Picard module, leave this blank, otherwise it should look like this:
+#           PICARD_DIR=${HOME}/directory/picard
+#       Where the 'picard.jar' file is located within '${HOME}/directory/picard'
+#   Set the sequencing platform on line 67
 #       This should look like:
 #           PLATFORM=Illumina
-#       This is set to Illumina by default, please see Picard's documentaiton for more details
+#       This is set to Illumina by default; please see Picard's documentaiton for more details
 
 #   List of SAM files for conversion
 SAMPLE_INFO=
 
-#   Reference genome to help base the conversion off of
+#   Reference genome to base the conversion from SAM to BAM off of
 REF_GEN=
 
 #   Scratch directory, for output
@@ -63,16 +60,8 @@ PROJECT=
 module load samtools
 #SAMTOOLS=
 
-#   Load the Picard Tools module for MSI, else define path to the
-#       SortSam, AddOrReplaceReadGroups, and MarkDuplicates utilities
-module load picard
-PICARD_DIR=`echo $PTOOL | rev | cut -d " " -f 1 - | rev`
-P_SORT="${PICARD_DIR}/picard.jar SortSam"
-#P_SORT=
-P_ADDRG="${PICARD_DIR}/picard.jar AddOrReplaceReadGroups"
-#P_ADDRG=
-P_MARKDUPS="${PICARD_DIR}/picard.jar MarkDuplicates"
-#P_MARKDUPS=
+#   Define path to the directory containing 'picard.jar' if not using MSI's Picard module
+PICARD_DIR=
 
 #   Sequencing platform
 PLATFORM=Illumina
@@ -100,36 +89,42 @@ function dedup() {
     #   Today's date
     YMD=`date +%Y-%m-%d`
     #   Define varaibles within relation to function
-    #   In order: SAM file being worked with, SortSam utility MarkDuplicates utility,
-    #       AddOrReplaceReadGroups utility, reference genome, outdirectory
-    #       sequencing platform, and project name
+    #   In order: SAM file being worked with, reference genome, outdirectory,
+    #       sequencing platform, project name
     SAMFILE="$1"
-    PICARD_SORT="$2/picard.jar SortSam"
-    MARKDUPS="$2/picard.jar MarkDuplicates"
-    ADDRG="$2/picard.jar AddOrReplaceReadGroups"
     REF_SEQ="$3"
     OUTDIR="$4"
     TYPE="$5"
     PROJ="$6"
+    #   Define path to Picard, either local or using MSI's Picard module
+    if [[ -z "$2" ]]
+    then
+        #   Use MSI's Picard module, with changes to Java's heap memeory options
+        module load picard
+        PICARD_DIR=`echo $PTOOL | rev | cut -d " " -f 1 - | rev`
+        PTOOL="java -Xmx15g -XX:MaxPermSize=10g -jar ${PICARD_DIR}"
+    else
+        #   Use local Picard installaiton, passed by arguments
+        PICARD_DIR="$2"
+        PTOOL="java -Xmx15g -XX:MaxPermSize=10g -jar ${PICARD_DIR}"
+    fi
     #   Sample name, taken from full name of SAM file
     SAMPLE_NAME=`basename "${SAMFILE}" .sam`
     #   Use Samtools to trim out the reads we don't care about
-    #   -f 3 gives us reads mapped in proper pair
-    #   -F 256 excludes reads not in their primary alignments
+    #       -f 3 gives us reads mapped in proper pair
+    #       -F 256 excludes reads not in their primary alignments
     samtools view -f 3 -F 256 -bT "${REF_SEQ}" "${SAMFILE}" > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
     #   Create alignment statistics for raw BAM files
     samtools flagstat "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
     #   Picard tools to sort and index
-    java -Xmx15g -XX:MaxPermSize=10g -jar \
-        "${PICARD_SORT}" \
+    "${PTOOL}"/picard.jar SortSam \
         INPUT="${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" \
         OUTPUT="${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam" \
         SORT_ORDER=coordinate \
         CREATE_INDEX=true \
         TMP_DIR="${HOME}/Scratch/Picard_Tmp"
     #   Then remove duplicates
-    java -Xmx15g -XX:MaxPermSize=10g -jar \
-        "${MARKDUPS}" \
+    "${PTOOL}"/picard.jar MarkDuplicates \
         INPUT="${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam" \
         OUTPUT="${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_deduplicated.bam" \
         METRICS_FILE="${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_Metrics.txt" \
@@ -138,8 +133,7 @@ function dedup() {
         TMP_DIR="${HOME}/Scratch/Picard_Tmp" \
         MAX_RECORDS_IN_RAM=50000
     #   Then add read groups
-    java -Xmx15g -XX:MaxPermSize=10g -jar \
-        "${ADDRG}" \
+    "${PTOOL}"/picard.jar AddOrReplaceReadGroups \
         INPUT="${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_deduplicated.bam" \
         OUTPUT="${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam" \
         RGID="${SAMPLE_NAME}" \

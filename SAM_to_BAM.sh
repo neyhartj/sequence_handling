@@ -53,7 +53,8 @@ SCRATCH=
 PROJECT=
 
 #   Make the outdirectories
-mkdir -p ${SCRATCH}/${PROJECT}/stats ${SCRATCH}/${PROJECT}/deduped ${SCRATCH}/${PROJECT}/sorted
+OUT=${SCRATCH}/${PROJECT}
+mkdir -p ${OUT}/stats ${OUT}/deduped ${OUT}/sorted ${OUT}/finished ${OUT}/raw
 
 #   Generate a list of sample names
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
@@ -71,21 +72,31 @@ SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 #           a deduplicated BAM file
 #           alignment statistics for the deduplicated BAM file
 process_sam() {
+    module load samtools
     #   Today's date
-    DATE=`date +%Y-%m-%d`
+    YMD=`date +%Y-%m-%d`
+    SAMFILE="$1"
+    REF_SEQ="$2"
+    OUTDIR="$3"
+    #   Sample name, taken from full name of SAM file
+    SAMPLE_NAME=`basename "${SAMFILE}" .sam`
     #   Generate a sorted BAM file
-    samtools view -bT "${REF_GEN}" "$1" | samtools sort - "${SCRATCH}"/"${PROJECT}"/sorted/"$2"_"${DATE}"
-    #   Create alignment statistics for the sorted BAM file
-    samtools flagstat "${SCRATCH}"/"${PROJECT}"/sorted/"$2"_"${DATE}" > "${SCRATCH}"/"${PROJECT}"/stats/"$2"_"${DATE}"_sorted_stats.out
-    #   Dedup the BAM file and create alignment statistics using SAMTools
-    samtools rmdup "${SCRATCH}"/"${PROJECT}"/sorted."$2"_"${DATE}".bam - | tee >(samtools flagstat - > "${SCRATCH}"/"${PROJECT}"/stats/"$2"_"${DATE}"_deduped_stats.out) > "${SCRATCH}"/"${PROJECT}"/deduped/"$2"_"${DATE}".bam
+    samtools view -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
+    #   Create alignment statistics for the raw BAM file
+    samtools flagstat "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
+    #   Sort the raw BAM file
+    samtools sort "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam"
+    #   Deduplicate the sorted BAM file
+    samtools rmdup "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam" "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam"
+    #   Create alignment statistics using SAMTools
+    samtools flagstat "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_finished_stats.out"
 }
 
 #   Export the SAM file processing function to be used by GNU Parallel
 export -f process_sam
 
 #   Run the SAM file processing function in parallel for all input SAM files
-parallel --xapply process_sam {1} {2} :::: ${SAMPLE_INFO} :::: ${SAMPLE_NAMES}
+cat ${SAMPLE_INFO} | parallel "process_sam {} ${REF_GEN} ${OUT}"
 
 #   Create a sorted BAM file for each input SAM file in parallel
 #parallel --xapply "samtools view -bT ${REF_GEN} {1} | samtools sort - - | tee >(samtools flagstat - > ${SCRATCH}/${PROJECT}/stats/{2}.out) > ${SCRATCH}/${PROJECT}/{2}_${DATE}.bam" :::: ${SAMPLE_INFO} :::: ${SAMPLE_NAMES}
