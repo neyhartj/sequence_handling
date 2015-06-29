@@ -72,7 +72,6 @@ SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 #           a deduplicated BAM file
 #           alignment statistics for the deduplicated BAM file
 function process_sam() {
-    module load samtools
     #   Today's date
     YMD=`date +%Y-%m-%d`
     SAMFILE="$1"
@@ -81,7 +80,7 @@ function process_sam() {
     #   Sample name, taken from full name of SAM file
     SAMPLE_NAME=`basename "${SAMFILE}" .sam`
     #   Generate a sorted BAM file
-    samtools view -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam
+    samtools view -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
     #   Create alignment statistics for the raw BAM file
     samtools flagstat "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_raw_stats.out
     #   Sort the raw BAM file
@@ -98,10 +97,7 @@ export -f process_sam
 #   Run the SAM file processing function in parallel for all input SAM files
 cat ${SAMPLE_INFO} | parallel "process_sam {} ${REF_GEN} ${OUT}"
 
-#   Create a sorted BAM file for each input SAM file in parallel
-#parallel --xapply "samtools view -bT ${REF_GEN} {1} | samtools sort - - | tee >(samtools flagstat - > ${SCRATCH}/${PROJECT}/stats/{2}.out) > ${SCRATCH}/${PROJECT}/{2}_${DATE}.bam" :::: ${SAMPLE_INFO} :::: ${SAMPLE_NAMES}
-
-#   Make a list of deduplicated BAM files for further use
-find ${SCRATCH}/${PROJECT}/deduped -name "*.bam" | sort > ${SCRATCH}/${PROJECT}/${PROJECT}_bam_files.txt
+#   Create a list of finished BAM files
+find ${OUT}/finished -name "*_finished.bam" | sort > ${OUT}/${PROJECT}_finished_BAM_files.txt
 echo "List of BAM files can be found at"
-echo "${SCRATCH}/${PROJECT}/${PROJECT}_bam_files.txt"
+echo "${OUT}/${PROJECT}_finished_BAM_files.txt"
