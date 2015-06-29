@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#PBS -l mem=22gb,nodes=1:ppn=8,walltime=36:00:00 
+#PBS -l mem=22gb,nodes=1:ppn=8,walltime=36:00:00
 #PBS -m abe 
 #PBS -M user@example.com
 #PBS -q oc
@@ -21,7 +21,7 @@ module load parallel
 #           and the rest is the full path to the actual list of samples
 #   Define a path to a reference genome on line 51
 #       This should look like:
-   #        REF_GEN=${HOME}/Directory/reference_genome.fa
+#           REF_GEN=${HOME}/Directory/reference_genome.fa
 #   Put the full directory path for the output in the 'SCRATCH' field on line 54
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
