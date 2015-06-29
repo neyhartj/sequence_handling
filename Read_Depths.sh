@@ -11,7 +11,7 @@ set -o pipefail
 
 module load parallel
 
-#   This script is a QSub submission for finding the read depths of a batch of samples
+#   This script is a QSub submission for calculating the read depths of a batch of samples
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
 #   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 37

@@ -82,13 +82,13 @@ function process_sam() {
     #   Generate a sorted BAM file
     samtools view -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
     #   Create alignment statistics for the raw BAM file
-    samtools flagstat "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_raw_stats.out
+    samtools flagstat "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
     #   Sort the raw BAM file
-    samtools sort "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam "${OUTDIR}"/sorted/"${SAMPLE_NAME}"_"${YMD}"_sorted.bam
+    samtools sort "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted"
     #   Deduplicate the sorted BAM file
-    samtools rmdup "${OUTDIR}"/sorted/"${SAMPLE_NAME}"_"${YMD}"_sorted.bam "${OUTDIR}"/finished/"${SAMPLE_NAME}"_"${YMD}"_finished.bam
+    samtools rmdup "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam" "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam"
     #   Create alignment statistics using SAMTools
-    samtools flagstat "${OUTDIR}"/finished/"${SAMPLE_NAME}"_"${YMD}"_finished.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_finished_stats.out
+    samtools flagstat "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_finished_stats.out"
 }
 
 #   Export the SAM file processing function to be used by GNU Parallel
