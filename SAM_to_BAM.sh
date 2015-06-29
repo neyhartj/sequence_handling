@@ -71,7 +71,7 @@ SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 #           alignment statistics for the sorted BAM file
 #           a deduplicated BAM file
 #           alignment statistics for the deduplicated BAM file
-process_sam() {
+function process_sam() {
     module load samtools
     #   Today's date
     YMD=`date +%Y-%m-%d`
@@ -81,15 +81,15 @@ process_sam() {
     #   Sample name, taken from full name of SAM file
     SAMPLE_NAME=`basename "${SAMFILE}" .sam`
     #   Generate a sorted BAM file
-    samtools view -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
+    samtools view -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam
     #   Create alignment statistics for the raw BAM file
-    samtools flagstat "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
+    samtools flagstat "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_raw_stats.out
     #   Sort the raw BAM file
-    samtools sort "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam"
+    samtools sort "${OUTDIR}"/raw/"${SAMPLE_NAME}"_"${YMD}"_raw.bam "${OUTDIR}"/sorted/"${SAMPLE_NAME}"_"${YMD}"_sorted.bam
     #   Deduplicate the sorted BAM file
-    samtools rmdup "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam" "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam"
+    samtools rmdup "${OUTDIR}"/sorted/"${SAMPLE_NAME}"_"${YMD}"_sorted.bam "${OUTDIR}"/finished/"${SAMPLE_NAME}"_"${YMD}"_finished.bam
     #   Create alignment statistics using SAMTools
-    samtools flagstat "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_finished_stats.out"
+    samtools flagstat "${OUTDIR}"/finished/"${SAMPLE_NAME}"_"${YMD}"_finished.bam > "${OUTDIR}"/stats/"${SAMPLE_NAME}"_"${YMD}"_finished_stats.out
 }
 
 #   Export the SAM file processing function to be used by GNU Parallel
