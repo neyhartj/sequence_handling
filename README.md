@@ -63,7 +63,7 @@ ___
 
 The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs), [_Sickle_](https://github.com/vsbuffalo/sickle), and [_Scythe_](https://github.com/vsbuffalo/scythe) for use with the `Quality_Triming.sh` script. It also has options for installing [_Bioawk_](https://github.com/lh3/bioawk), [_SAMTools_](http://www.htslib.org/) and [_R_](http://cran.r-project.org/), all dependencies for various scripts within this package.
 
-#### dependencies
+##### dependencies
 
 The `installer.sh` script depends on [_Git_](http://www.git-scm.com/), [_Wget_](http://www.gnu.org/software/wget/), the [_GNU Compiler Collection_](https://gcc.gnu.org/) (GCC), and [_GNU Make_](http://www.gnu.org/software/make/) to run.
 
@@ -75,7 +75,7 @@ The `sample_list_generator.sh` script creates a list of samples using a director
 
 The `sample_list_generator.sh` script has no external dependencies.
 
-## read\_counts.sh
+### read\_counts.sh
 
 The `read_counts.sh` script calls [_Bioawk_](https://github.com/lh3/bioawk) to get accurate counts for read number for a list of samples. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples.
 
