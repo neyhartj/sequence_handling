@@ -19,7 +19,7 @@ Finally, there is one script that is neither designed to run directly from the s
 
 Piping one sample alone through this workflow can take over 12 hours to completely run. Most sequence handling jobs are not dealing with one sample, so the amount of time to run this workflow increases drastically. Traditionally, we get around this by having one workflow per sample. However, this drastically increases the chance for mistakes to be made via simple mistyping. The batch submission allows for the chance of those mistakes to be drastically reduced.
 
-List-based batch submission, first and foremost, allow the workflow to run on multiple samples at once, but be selective about which samples are being used. Sometimes, one may need only certain samples within a group of samples to be run; rather than move reads around, which are large and cumbersome to move, utilizing a list tells our workflow exactly which samples should be piped through our workflow. List format should have the full path to each sample, forward and reverse, in a single column listed. An example is shown below:
+List-based batch submission allows the workflow to run on multiple samples at once, but be selective about which samples are being used. Sometimes, one may need only certain samples within a group of samples to be run; rather than move reads around, which are large and cumbersome to move, utilizing a list tells our workflow exactly which samples should be piped through our workflow. List format should have the full path to each sample, forward and reverse, in a single column listed. An example is shown below:
 
 >/home/path\_to\_sample/sample\_001\_R1.fastq.gz
 
