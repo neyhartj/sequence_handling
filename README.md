@@ -71,7 +71,7 @@ The `installer.sh` script depends on [_Git_](http://www.git-scm.com/), [_Wget_](
 
 The `sample_list_generator.sh` script creates a list of samples using a directory tree for its searching. This will find **all** samples in a given directory and its subdirectories. Only use this if you are using all samples within a directory tree. `sample_list_generator.sh` is designed to be run from the command line directly.
 
-#### dependencies
+##### dependencies
 
 The `sample_list_generator.sh` script has no external dependencies.
 
@@ -79,7 +79,7 @@ The `sample_list_generator.sh` script has no external dependencies.
 
 The `read_counts.sh` script calls [_Bioawk_](https://github.com/lh3/bioawk) to get accurate counts for read number for a list of samples. Output is written to a tab-delimited file file with sample name drawn from the file name for the list of samples.
 
-#### dependencies
+##### dependencies
 
 The `read_counts.sh` script depends on [_Bioawk_](https://github.com/lh3/bioawk) to run.
 
@@ -87,7 +87,7 @@ The `read_counts.sh` script depends on [_Bioawk_](https://github.com/lh3/bioawk)
 
 The `read_mapping_start.sh` script generates a series of QSub submissions for use with the [Portable Batch System](http://www.pbsworks.com/) on MSI's resources. starts a series of [BWA](http://bio-bwa.sourceforge.net/) sessions to map reads back to a reference genome.
 
-#### dependencies
+##### dependencies
 
 The `read_mapping_start.sh` script depends on the [Portable Batch System](http://www.pbsworks.com/) and [BWA](http://bio-bwa.sourceforge.net/) to run.
 ___
@@ -104,7 +104,7 @@ ___
 
 The `Assess_Quality.sh` script runs [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) on the command line on a series of samples organized in a project directory for quality control. In addition, a list of all output zip files will be generated for use with the `Read_Depths.sh` script. Our recommendation is using this both before and after quality trimming and before read mapping. This script is designed to be run using the [Portable Batch System](http://www.pbsworks.com/).
 
-#### dependencies
+##### dependencies
 
 The `Assess_Quality.sh` script depends on FastQC, the [Portable Batch System](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
@@ -112,7 +112,7 @@ The `Assess_Quality.sh` script depends on FastQC, the [Portable Batch System](ht
 
 The `Read_Depths.sh` script utilizes the output from [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to calculate the read depths for a batch of samples and outputs them into one convenient text file.
 
-#### dependencies
+##### dependencies
 
 The `Read_Depths.sh` script depends on the [Portable Batch System](http://www.pbsworks.com/) and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
@@ -122,7 +122,7 @@ The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](
 
 **NOTE: A list of trimmed FastQ files is _NOT_ output by this script. To do so, change to your out directory and run ``find `pwd` -regex ".*_R[1-2]_trimmed.fq.gz" | sort > samples_trimmed.txt`` to get the list; work is being done to get this done automatically**
 
-#### dependencies
+##### dependencies
 
 The `Quality_Trimming.sh` script depends on [_Sickle_](https://github.com/vsbuffalo/sickle), [_Scythe_](https://github.com/vsbuffalo/scythe), [_Seqqs_](https://github.com/morrelllab.seqqs), [_R_](http://cran.r-project.org/), the [Portable Batch System](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
@@ -130,7 +130,7 @@ The `Quality_Trimming.sh` script depends on [_Sickle_](https://github.com/vsbuff
 
 The `SAM_Processing_SAMTools.sh` script converts the SAM files from read mapping with [BWA](http://bio-bwa.sourceforge.net/) to the BAM format using [_Samtools_](http://www.htslib.org/). In the conversion process, it will sort and deduplicate the data for the finished BAM file, also using [_Samtools_](http://www.htslib.org/). Alignment statistics will also be generated for both raw and finished BAM files.
 
-#### dependencies
+##### dependencies
 
 The `SAM_Processing_SAMTools.sh` script depends on [_SAMTools_](http://www.htslib.org/), the [Portable Batch System](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
@@ -142,7 +142,7 @@ The `SAM_Processing_Picard.sh` script converts the SAM files from read mapping w
 
 **NOTE: This script has not been tested, use with caution**
 
-#### dependencies
+##### dependencies
 
 The `SAM_Processing_Picard.sh` script depends on [_SAMTools_](http://www.htslib.org/), Picard, the [Portable Batch System](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
@@ -150,7 +150,7 @@ The `SAM_Processing_Picard.sh` script depends on [_SAMTools_](http://www.htslib.
 
 The `Coverage_Map.sh` script generates coverage maps from BAM files using [_BEDTools_](http://bedtools.readthedocs.org/en/latest/). This map is in text format and is used for making coverage plots. In addition to generating coverage maps, this script will create a list of all the coverage maps generated for use in other scripts.
 
-#### dependencies
+##### dependencies
 
 The `Coverage_Map.sh` script depends on [_BEDTools_](http://bedtools.readthedocs.org/en/latest/), the [Portable Batch System](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
@@ -160,7 +160,7 @@ The `Plot_Coverage.sh` script creates plots using [_R_](http://cran.r-project.or
 
 **NOTE: This script has not been tested, use with caution**
 
-#### dependencies
+##### dependencies
 
 The `Plot_Coverage.sh` script depends on the `plot_cov.R` script, [_R_](http://cran.r-project.org/), the [Portable Batch System](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
@@ -171,6 +171,10 @@ ___
 ### plot\_cov.R
 
 The `plot_cov.R` script is the graphical brains behind the `Plot_Coverage.sh` script. The latter will automatically call upon the former to create the coverage plots based off coverage maps. One needs to neither open this script nor run it from the command line to generate coverage plots unless one desires to change the graphical parameters.
+
+##### dependencies
+
+The `plot_cov.R` script has no external dependencies.
 
 ___
 
