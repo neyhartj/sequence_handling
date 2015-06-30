@@ -97,7 +97,7 @@ case "$1" in
             f=`head -"$i" "$FWD_FILE" | tail -1`
             r=`head -"$i" "$REV_FILE" | tail -1`
             s=`basename "$f" "$FWD"`
-            echo "module load bwa && bwa mem ${SETTINGS} ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}"
+            echo "module load bwa && bwa mem ${SETTINGS} ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Read_Mapping
         done
         ;;
     "index" )
@@ -108,8 +108,9 @@ case "$1" in
         #   Assign variables for running BWA index
         REF_GEN="$2"
         EMAIL="$3"
+        s=`basename "${REF_GEN}"
         #   Generate a QSub submission for BWA index
-        echo "module load && bwa index ${REF_GEN}" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}"
+        echo "module load && bwa index ${REF_GEN}" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Index
         ;;
     * )
         #   Anythin other than 'map' or 'index'
