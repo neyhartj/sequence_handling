@@ -65,7 +65,7 @@ The `installer.sh` script installs [_Seqqs_](https://github.com/morrelllab.seqqs
 
 #### dependencies
 
-The `installer.sh` script depends on Git, Wget, GCC, and GNU Make to run.
+The `installer.sh` script depends on [_Git_](http://www.git-scm.com/), [_Wget_](http://www.gnu.org/software/wget/), the [_GNU Compiler Collection_](https://gcc.gnu.org/) (GCC), and [_GNU Make_](http://www.gnu.org/software/make/) to run.
 
 ### sample\_list\_generator.sh
 
