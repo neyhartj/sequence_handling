@@ -96,10 +96,6 @@ ___
 
 **NOTE: Each of these scripts contains usage information within the script itself. Furthermore, all values for these scripts are hard-coded into the script itself. Please open each script using your favourite text editor (ex. [_Vim_](http://www.vim.org), [_Sublime Text_](http://www.sublimetext.com), [_Visual Studio Code_](http://code.visualstudio.com), etc.) to read usage information and set values**
 
-### ~~Read_Counts.sh~~
-
-**NOTE: This script has been converted to a shell script. See `read_counts.sh` above.**
-
 ### Assess_Quality.sh
 
 The `Assess_Quality.sh` script runs [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) on the command line on a series of samples organized in a project directory for quality control. In addition, a list of all output zip files will be generated for use with the `Read_Depths.sh` script. Our recommendation is using this both before and after quality trimming and before read mapping. This script is designed to be run using the [Portable Batch System](http://www.pbsworks.com/).
@@ -120,7 +116,7 @@ The `Read_Depths.sh` script depends on the [Portable Batch System](http://www.pb
 
 The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](https://github.com/morrelllab.seqqs) repository on GitHub) on a series of samples organized in a project directory.. In addition to requiring _Seqqs_ to be installed, this also requires [GNU Parallel](http://www.gnu.org/software/parallel/) to be installed on the system.
 
-**NOTE: A list of trimmed FastQ files is _NOT_ output by this script. To do so, change to your out directory and run ``find `pwd` -regex ".*_R[1-2]_trimmed.fq.gz" | sort > samples_trimmed.txt`` to get the list; work is being done to get this done automatically**
+**NOTE: A list of trimmed FastQ files is _SOMETIMES_ output by this script. If the did not output a list of samples, change to your out directory and run ``find `pwd` -regex ".*_R[1-2]_trimmed.fq.gz" | sort > samples_trimmed.txt`` to get the list. To see if it did, read the output messages to see if and where the list might be. Work is being done to output a list consistently**
 
 ##### dependencies
 
