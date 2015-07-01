@@ -73,7 +73,7 @@ function read_depths() {
     TOTAL_SEQUENCE=`grep 'Total Sequences' fastqc_data.txt | cut -f 2`
     SEQUENCE_LENGTH=`grep 'Sequence length' fastqc_data.txt | cut -f 2`
     #   Do math and write to output file
-    echo -e "${SAMPLE_NAME} \t $[${TOTAL_SEQUENCE} / ${SEQUENCE_LENGTH} * ${TARG}]" >> "${OUTDIR}"/"${PROJ}"_read_depths.txt
+    echo -e "${SAMPLE_NAME} \t $[${TOTAL_SEQUENCE} * ${SEQUENCE_LENGTH} / ${TARG}]" >> "${OUTDIR}"/"${PROJ}"_read_depths.txt
     #   Get rid of unzipped FastQC report files
     cd "${ROOT}"
     rm -rf "${ZIP_DIR}"
