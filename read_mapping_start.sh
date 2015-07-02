@@ -108,7 +108,7 @@ case "$1" in
         #   Assign variables for running BWA index
         REF_GEN="$2"
         EMAIL="$3"
-        s=`basename "${REF_GEN}"
+        s=`basename "${REF_GEN}"`
         #   Generate a QSub submission for BWA index
         echo "module load && bwa index ${REF_GEN}" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Index
         ;;
