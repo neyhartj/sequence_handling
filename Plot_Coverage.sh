@@ -34,7 +34,7 @@ mkdir -p ${SCRATCH}/${PROJECT}
 
 #   Check if R is installed and in the path
 if `command -v Rscript > /dev/null 2> /dev/null`
-    then 
+    then
         echo "R is installed, OK"
     else
         echo "You need R (Rscript) to be installed and in your \$PATH"
@@ -47,16 +47,43 @@ fi
 #       and genes
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
+    #   Figure out what this sample is
     s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
-    name="`basename $s .coverage.hist.txt`" 
+    name="`basename $s .coverage.hist.txt`"
     echo "${name}" >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
+    #   Make a map for the genome
     grep 'all' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
     GENOME="${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
+    #   Make a map for exons
     grep 'exon' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
     EXON="${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
+    #   Make a map for genes
     grep 'gene' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
     GENE="${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
 done
+
+
+function splitMaps() {
+    #   Figure out what this sample is
+    sample="$1"
+    scratch="$2"
+    project="$3"
+    name="`basename $sample .coverage.hist.txt`"
+    echo "${name}" >> "${scratch}"/"${project}"/sample_names.txt
+    #   Make a map for the genome
+    grep 'all' "$sample" > "${scratch}"/"${project}"/"${name}"_genome.txt
+    GENOME="${scratch}"/"${project}"/"${name}"_genome.txt
+    #   Make a map for exons
+    grep 'exon' "$sample" > "${scratch}"/"${project}"/"${name}"_exon.txt
+    EXON="${scratch}"/"${project}"/"${name}"_exon.txt
+    #   Make a map for genes
+    grep 'gene' "$sample" > "${scratch}"/"${project}"/"${name}"_gene.txt
+    GENE="${scratch}"/"${project}"/"${name}"_gene.txt
+}
+
+export -f splitMaps
+
+cat ${SAMPLE_INFO} | parallel "splitMaps {} ${SCRATCH} ${PROJECT}"
 
 #   Create lists of all split maps
 find "${SCRATCH}"/"${PROJECT}" -name "*_genome.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_genomes.txt
@@ -71,4 +98,4 @@ SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
 OUTDIR="${SCRATCH}/${PROJECT}/"
 
 #   Create the coverage plots in parallel
-parallel --xapply "Rscript ${PLOT_COV} {1} {2} {3} {4}" :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} ::: ${OUTDIR}
+parallel --xapply "Rscript ${PLOT_COV} {1} {2} {3} {4} {5}" :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} ::: ${OUTDIR} :::: ${SAMPLE_NAMES}
