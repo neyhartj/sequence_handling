@@ -41,28 +41,26 @@ if `command -v Rscript > /dev/null 2> /dev/null`
         exit 1
 fi
 
-#   Split the coverage map into a map for:
+#   A function to split the coverage map into a map for:
 #       the whole genome
 #       exons
 #       and genes
-for i in `seq $(wc -l < "${SAMPLE_INFO}")`
-do
-    #   Figure out what this sample is
-    s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
-    name="`basename $s .coverage.hist.txt`"
-    echo "${name}" >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
-    #   Make a map for the genome
-    grep 'all' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
-    GENOME="${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
-    #   Make a map for exons
-    grep 'exon' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
-    EXON="${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
-    #   Make a map for genes
-    grep 'gene' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
-    GENE="${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
-done
-
-
+#for i in `seq $(wc -l < "${SAMPLE_INFO}")`
+#do
+#    #   Figure out what this sample is
+#    s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
+#    name="`basename $s .coverage.hist.txt`"
+#    echo "${name}" >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
+#    #   Make a map for the genome
+#    grep 'all' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
+#    GENOME="${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
+#    #   Make a map for exons
+#    grep 'exon' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
+#    EXON="${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
+#    #   Make a map for genes
+#    grep 'gene' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
+#    GENE="${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
+#done
 function splitMaps() {
     #   Figure out what this sample is
     sample="$1"
