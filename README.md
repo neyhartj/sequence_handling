@@ -154,8 +154,6 @@ The `Coverage_Map.sh` script depends on [_BEDTools_](http://bedtools.readthedocs
 
 The `Plot_Coverage.sh` script creates plots using [_R_](http://cran.r-project.org/) based off of coverage maps. It will generate three plots: one showing coverage across the genome, one showing coverage across exons, and one showing coverage across genes. This script uses `plot_cov.R` to generate the plots.
 
-**NOTE: This script has not been tested, use with caution**
-
 ##### dependencies
 
 The `Plot_Coverage.sh` script depends on the `plot_cov.R` script, [_R_](http://cran.r-project.org/), the [_Portable Batch System_](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
