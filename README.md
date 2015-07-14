@@ -3,6 +3,9 @@
 ___
 ___
 ## Introduction
+
+> For greater detail about everything, please see the [wiki](https://github.com/MorrellLAB/sequence_handling/wiki) for this repository
+
 ### What is `sequence_handling` for?
 
 `sequence_handling` is a series of scripts to automate and speed up DNA sequence aligning and quality control through the use of our workflow outlined here. This repository contains two general kinds of scripts: *Shell Scripts* and *Batch Submission Scripts*, with one exception.
@@ -17,9 +20,7 @@ Finally, there is one script that is neither designed to run directly from the s
 
 ### Why use list-based batch submission?
 
-Piping one sample alone through this workflow can take over 12 hours to completely run. Most sequence handling jobs are not dealing with one sample, so the amount of time to run this workflow increases drastically. Traditionally, we get around this by having one workflow per sample. However, this drastically increases the chance for mistakes to be made via simple mistyping. The batch submission allows for the chance of those mistakes to be drastically reduced.
-
-List-based batch submission allows the workflow to run on multiple samples at once, but be selective about which samples are being used. Sometimes, one may need only certain samples within a group of samples to be run; rather than move reads around, which are large and cumbersome to move, utilizing a list tells our workflow exactly which samples should be piped through our workflow. List format should have the full path to each sample, forward and reverse, in a single column listed. An example is shown below:
+Piping one sample alone through this workflow can take over 12 hours to completely run. Most sequence handling jobs are not dealing with one sample, so the amount of time to run this workflow increases drastically. List-based batch submission simplifies the amount of typing that one has to do, and enables parallel processing to decrease time spent waiting for samples to finish. An example list is shown velow
 
 >/home/path\_to\_sample/sample\_001\_R1.fastq.gz
 
@@ -29,7 +30,6 @@ List-based batch submission allows the workflow to run on multiple samples at on
 
 >/home/path\_to\_sample/sample\_003\_R2.fastq.gz
 
-Note that there could be other samples in `/home/path_to_sample/`, but only samples 001 and 003 will be run through our workflow.
 
 ### Why use parallel processing?
 
@@ -102,7 +102,7 @@ The `Assess_Quality.sh` script runs [_FastQC_](http://www.bioinformatics.babraha
 
 ##### dependencies
 
-The `Assess_Quality.sh` script depends on FastQC, the [_Portable Batch System_](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
+The `Assess_Quality.sh` script depends on [_FastQC_](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/), the [_Portable Batch System_](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
 ### Read\_Depths.sh
 
@@ -140,7 +140,7 @@ The `SAM_Processing_Picard.sh` script converts the SAM files from read mapping w
 
 ##### dependencies
 
-The `SAM_Processing_Picard.sh` script depends on [_SAMTools_](http://www.htslib.org/), Picard, the [_Portable Batch System_](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
+The `SAM_Processing_Picard.sh` script depends on [_SAMTools_](http://www.htslib.org/), [_Picard_](http://broadinstitute.github.io/picard/), the [_Portable Batch System_](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
 
 ### Coverage\_Map.sh
 
