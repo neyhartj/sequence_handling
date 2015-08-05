@@ -14,6 +14,23 @@ module load parallel
 #   This script is a QSub submission script for generating plots based off coverage maps
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 36
+#       This should look like:
+#           SAMPLE_INFO=${HOME}/Directory/list.txt
+#   Name the project in the 'PROJECT' field on line 39
+#       This should look lke:
+#           PROJECT=Genetics
+#   Put the full directory path for the output in the 'SCRATCH' field on line 42
+#       This should look like:
+#           SCRATCH="${HOME}/Out_Directory"
+#       Adjust for your own out directory.
+#   Define the directory where the sequence_handling scripts were downloaded on line 45
+#       This is to find the 'plot_cov.R' script for making the plots
+#       This should look like:
+#           SEQ_HANDLING_DIR=
+#   Run this script using the qsub command
+#       qsub Plot_Coverage.sh
+#   This script outputs three plots in PDF format for each sample
 
 #   List of text files for plotting
 SAMPLE_INFO=
@@ -34,33 +51,26 @@ mkdir -p ${SCRATCH}/${PROJECT}
 
 #   Check if R is installed and in the path
 if `command -v Rscript > /dev/null 2> /dev/null`
-    then
-        echo "R is installed, OK"
-    else
-        echo "You need R (Rscript) to be installed and in your \$PATH"
-        exit 1
+then
+    echo "R is installed, OK"
+else
+    echo "You need R (Rscript) to be installed and in your \$PATH"
+    exit 1
+fi
+
+#   Check to see if the path to the 'plot_cov.R' script is defined properly
+if [[ -f "${PLOT_COV}" ]]
+then
+    echo "Found the 'plot_cov.R' script!"
+else
+    echo "Failed to find the 'plot_cov.R' script, please redefine"
+    exit 1
 fi
 
 #   A function to split the coverage map into a map for:
 #       the whole genome
 #       exons
 #       and genes
-#for i in `seq $(wc -l < "${SAMPLE_INFO}")`
-#do
-#    #   Figure out what this sample is
-#    s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
-#    name="`basename $s .coverage.hist.txt`"
-#    echo "${name}" >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
-#    #   Make a map for the genome
-#    grep 'all' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
-#    GENOME="${SCRATCH}"/"${PROJECT}"/"${name}"_genome.txt
-#    #   Make a map for exons
-#    grep 'exon' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
-#    EXON="${SCRATCH}"/"${PROJECT}"/"${name}"_exon.txt
-#    #   Make a map for genes
-#    grep 'gene' "$s" > "${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
-#    GENE="${SCRATCH}"/"${PROJECT}"/"${name}"_gene.txt
-#done
 function splitMaps() {
     #   Figure out what this sample is
     sample="$1"
@@ -79,8 +89,10 @@ function splitMaps() {
     GENE="${scratch}"/"${project}"/"${name}"_gene.txt
 }
 
+#   Export the function so parallel can see it
 export -f splitMaps
 
+#   Split the maps in parallel
 cat ${SAMPLE_INFO} | parallel "splitMaps {} ${SCRATCH} ${PROJECT}"
 
 #   Create lists of all split maps
