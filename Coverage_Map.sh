@@ -1,7 +1,7 @@
 #!/bin/env bash
 
-#PBS -l mem=12gb,nodes=1:ppn=8,walltime=16:00:00 
-#PBS -m abe 
+#PBS -l mem=12gb,nodes=1:ppn=8,walltime=16:00:00
+#PBS -m abe
 #PBS -M user@example.com
 #PBS -q lab
 
@@ -19,20 +19,20 @@ module load parallel
 #       Otherwise, it should look like this:
 #           BEDTOOLS=${HOME}/software/bedtools
 #       Please be sure to comment out (put a '#' symbol in front of) the 'module load bedtools' on line 46
-#       And to uncomment (remove the '#' symbol) from the 'BEDTOOLS=' line 47
-#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 50
+#       And to uncomment (remove the '#' symbol) from lines 47 and 48
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 51
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #       Use ${HOME}, as it is a link that the shell understands as your home directory
 #           and the rest is the full path to the actual list of samples
-#   Name the project in the 'PROJECT' field on line 53
+#   Name the project in the 'PROJECT' field on line 54
 #       This should look lke:
 #           PROJECT=Genetics
-#   Put the full directory path for the output in the 'SCRATCH' field on line 56
+#   Put the full directory path for the output in the 'SCRATCH' field on line 57
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
 #       Adjust for your own out directory.
-#   Define a reference annotation file for the coverage mapping process in the 'REF_ANN' field on line 60
+#   Define a reference annotation file for the coverage mapping process in the 'REF_ANN' field on line 61
 #       This should look like:
 #           REF_ANN=${HOME}/Directory/annotation.bed
 #       This can be either a BED file or a GFF file
@@ -45,6 +45,7 @@ module load parallel
 #   Otherwise, have path to BEDTools directory
 module load bedtools
 #BEDTOOLS=
+#export PATH=$PATH:/$BEDTOOLS
 
 #   List of BAM files for coverage mapping
 SAMPLE_INFO=

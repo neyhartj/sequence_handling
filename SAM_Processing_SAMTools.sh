@@ -14,31 +14,35 @@ module load parallel
 #   This script is a QSub submission script for converting a batch of SAM files to BAM files
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notificaitons on start and completion of this script
-#   Define a path to SAMTools in the 'SAMTOOLS' field on line 38
+#   Define a path to SAMTools in the 'SAMTOOLS' field on line 44
 #       If using MSI, leave the definition as is to use their installation of SAMTools
 #       Otherwise, it should look like this:
 #           SAMTOOLS=${HOME}/software/samtools
-#       Please be sure to comment out (put a '#' symbol in front of) the 'module load samtools' on line 37
-#       And to uncomment (remove the '#' symbol) from the 'SAMTOOLS=' on line 38
-#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 41
+#       Please be sure to comment out (put a '#' symbol in front of) the 'module load samtools' on line 43
+#       And to uncomment (remove the '#' symbol) from lines 44 and 45
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 48
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #       Use ${HOME}, as it is a link that the shell understands as your home directory
 #           and the rest is the full path to the actual list of samples
-#   Define a path to a reference genome on line 47
+#   Define a path to a reference genome on line 51
 #       This should look like:
    #        REF_GEN=${HOME}/Directory/reference_genome.fa
-#   Put the full directory path for the output in the 'SCRATCH' field on line 50
+#   Put the full directory path for the output in the 'SCRATCH' field on line 54
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
 #       Adjust for your own out directory.
-#   Name the project in the 'PROJECT' field on line 53
+#   Name the project in the 'PROJECT' field on line 57
 #       This should look lke:
 #           PROJECT=Genetics
+#   Run this script with the qsub command
+#       qsub SAM_Processing_SAMTools.sh
+#   This script outputs sorted and deduplicated BAM files for each sample
 
 #   Load the SAMTools module for MSI, else define path to SAMTools installation
 module load samtools
 #SAMTOOLS=
+#export PATH=$PATH:${SAMTOOLS}
 
 #   List of SAM files for conversion
 SAMPLE_INFO=
