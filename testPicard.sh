@@ -4,6 +4,8 @@ set -e
 set -u
 set -o pipefail
 
+module load parallel
+
 #   List of SAM files for conversion
 SAMPLE_INFO=${HOME}/SRA_scratch/Read_Mapping/SRA_SAM_list.txt
 
