@@ -113,4 +113,4 @@ function dedup() {
 #   Export the function to be used by GNU parallel
 export -f dedup
 
-cat ${SAMPLE_INFO} | parallel echo "dedup {} ${PICARD_DIR} ${REF_GEN} ${OUT} ${PLATFORM} ${PROJECT}" | qsub -l mem=22gb,nodes=1:ppn=8,walltime=36:00:00 -m abe -M hoff0792@umn.edu -q lab-long
+cat ${SAMPLE_INFO} | parallel echo "dedup {} ${PICARD_DIR} ${REF_GEN} ${OUT} ${PLATFORM} ${PROJECT}" | qsub -l mem=15gb,nodes=1:ppn=8,walltime=36:00:00 -m abe -M hoff0792@umn.edu -q lab-long
