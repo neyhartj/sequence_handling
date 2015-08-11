@@ -5,16 +5,16 @@ set -u
 set -o pipefail
 
 #   List of SAM files for conversion
-SAMPLE_INFO=
+SAMPLE_INFO=${HOME}/sandbox/SRA_scratch/Read_Mapping/SRA_SAM_list.txt
 
 #   Reference genome to base the conversion from SAM to BAM off of
-REF_GEN=
+REF_GEN=${HOME}/Shared/References/Reference_Sequences/Barley/Morex/Morex_Reference.fasta
 
 #   Scratch directory, for output
-SCRATCH=
+SCRATCH=${HOME}/sandbox/SRA_scratch
 
 #   Name of project
-PROJECT=
+PROJECT=SRA_Picard
 
 #	Load the SAMTools module for MSI, else define path to SAMTools installation
 module load samtools
