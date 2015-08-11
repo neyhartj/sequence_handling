@@ -5,13 +5,13 @@ set -u
 set -o pipefail
 
 #   List of SAM files for conversion
-SAMPLE_INFO=${HOME}/sandbox/SRA_scratch/Read_Mapping/SRA_SAM_list.txt
+SAMPLE_INFO=${HOME}/SRA_scratch/Read_Mapping/SRA_SAM_list.txt
 
 #   Reference genome to base the conversion from SAM to BAM off of
 REF_GEN=${HOME}/Shared/References/Reference_Sequences/Barley/Morex/Morex_Reference.fasta
 
 #   Scratch directory, for output
-SCRATCH=${HOME}/sandbox/SRA_scratch
+SCRATCH=${HOME}/SRA_scratch
 
 #   Name of project
 PROJECT=SRA_Picard
