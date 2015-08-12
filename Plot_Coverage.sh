@@ -47,7 +47,8 @@ PLOT_COV=${SEQ_HANDLING_DIR}/plot_cov.R
 
 #   Other variables, don't need to be user-specified
 DATE=`date +%Y-%m-%d`
-mkdir -p ${SCRATCH}/${PROJECT}
+OUT=${SCRATCH}/${PROJECT}/Plot_Coverage
+mkdir -p ${OUT}
 
 #   Check if R is installed and in the path
 if `command -v Rscript > /dev/null 2> /dev/null`
@@ -74,38 +75,33 @@ fi
 function splitMaps() {
     #   Figure out what this sample is
     sample="$1"
-    scratch="$2"
-    project="$3"
+    out="$2"
     name="`basename $sample .coverage.hist.txt`"
-    echo "${name}" >> "${scratch}"/"${project}"/sample_names.txt
+    echo "${name}" >> "${out}"/sample_names.txt
     #   Make a map for the genome
-    grep 'all' "$sample" > "${scratch}"/"${project}"/"${name}"_genome.txt
-    GENOME="${scratch}"/"${project}"/"${name}"_genome.txt
+    grep 'all' "$sample" > "${out}"/"${name}"_genome.txt
     #   Make a map for exons
-    grep 'exon' "$sample" > "${scratch}"/"${project}"/"${name}"_exon.txt
-    EXON="${scratch}"/"${project}"/"${name}"_exon.txt
+    grep 'exon' "$sample" > "${out}"/"${name}"_exon.txt
     #   Make a map for genes
-    grep 'gene' "$sample" > "${scratch}"/"${project}"/"${name}"_gene.txt
-    GENE="${scratch}"/"${project}"/"${name}"_gene.txt
+    grep 'gene' "$sample" > "${out}"/"${name}"_gene.txt
 }
 
 #   Export the function so parallel can see it
 export -f splitMaps
 
 #   Split the maps in parallel
-cat ${SAMPLE_INFO} | parallel "splitMaps {} ${SCRATCH} ${PROJECT}"
+cat ${SAMPLE_INFO} | parallel "splitMaps {} ${OUT}"
 
 #   Create lists of all split maps
-find "${SCRATCH}"/"${PROJECT}" -name "*_genome.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_genomes.txt
-ALL_GENOMES="${SCRATCH}"/"${PROJECT}"/all_genomes.txt
-find "${SCRATCH}"/"${PROJECT}" -name "*_exon.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_exons.txt
-ALL_EXONS="${SCRATCH}"/"${PROJECT}"/all_exons.txt
-find "${SCRATCH}"/"${PROJECT}" -name "*_gene.txt" | sort >> "${SCRATCH}"/"${PROJECT}"/all_genes.txt
-ALL_GENES="${SCRATCH}"/"${PROJECT}"/all_genes.txt
+find "${OUT}" -name "*_genome.txt" | sort >> "${OUT}"/all_genomes.txt
+ALL_GENOMES="${OUT}"/all_genomes.txt
+find "${OUT}" -name "*_exon.txt" | sort >> "${OUT}"/all_exons.txt
+ALL_EXONS="${OUT}"/all_exons.txt
+find "${OUT}" -name "*_gene.txt" | sort >> "${OUT}"/all_genes.txt
+ALL_GENES="${OUT}"/all_genes.txt
 
 #   Final variable definitions
-SAMPLE_NAMES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
-OUTDIR="${SCRATCH}/${PROJECT}/"
+SAMPLE_NAMES="${OUT}"/sample_names.txt
 
 #   Create the coverage plots in parallel
-parallel --xapply "Rscript ${PLOT_COV} {1} {2} {3} {4} {5}" :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} ::: ${OUTDIR} :::: ${SAMPLE_NAMES}
+parallel --xapply "Rscript ${PLOT_COV} {1} {2} {3} {4} {5}" :::: ${ALL_GENOMES} :::: ${ALL_EXONS} :::: ${ALL_GENES} ::: ${OUT} :::: ${SAMPLE_NAMES}

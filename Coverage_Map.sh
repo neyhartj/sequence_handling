@@ -62,22 +62,23 @@ REF_ANN=
 
 #   Other variables, don't need to be user-specified
 DATE=`date +%Y-%m-%d`
-mkdir -p ${SCRATCH}/${PROJECT}
+OUT=${SCRATCH}/${PROJECT}/Coverage_Map
+mkdir -p ${OUT}
 
 #   List of sample names
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
     s=`head -"$i" "${SAMPLE_INFO}" | tail -1`
-    basename "$s" .bam >> "${SCRATCH}"/"${PROJECT}"/sample_names.txt
+    basename "$s" .bam >> "${OUT}"/sample_names.txt
 done
 
-SAMPLES="${SCRATCH}"/"${PROJECT}"/sample_names.txt
+SAMPLES="${OUT}"/sample_names.txt
 
 #   Do the work here
-cd ${SCRATCH}/${PROJECT}
-parallel --xapply "bedtools coverage -hist -abam {1} -b ${REF_ANN} > ${SCRATCH}/${PROJECT}/Sample_{2}_${PROJECT}_${DATE}.coverage.hist.txt" :::: ${SAMPLE_INFO} :::: ${SAMPLES}
+cd ${OUT}
+parallel --xapply "bedtools coverage -hist -abam {1} -b ${REF_ANN} > ${OUT}/Sample_{2}_${PROJECT}_${DATE}.coverage.hist.txt" :::: ${SAMPLE_INFO} :::: ${SAMPLES}
 
 #   Make an output list for use with
-find ${SCRATCH}/${PROJECT} -name "*.coverage.hist.txt" | sort > ${SCRATCH}/${PROJECT}/${PROJECT}_samples_coverage.txt
+find ${OUT} -name "*.coverage.hist.txt" | sort > ${OUT}/${PROJECT}_samples_coverage.txt
 echo "List of samples for  can be found at"
-echo "${SCRATCH}/${PROJECT}/${PROJECT}_samples_coverage.txt"
+echo "${OUT}/${PROJECT}_samples_coverage.txt"

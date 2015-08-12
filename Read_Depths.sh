@@ -19,9 +19,9 @@ module load parallel
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #       Use ${HOME}, as it is a link that the shell understands as your home directory
 #           and the rest is the full path to the actual list of samples
-#   Put the full directory path for the output in the 'OUT' field on line 40
+#   Put the full directory path for the output in the 'SCRATCH' field on line 40
 #       This should look like:
-#           OUT="{HOME}/Out_Directory
+#           SCRATCH="{HOME}/Out_Directory
 #       Adjust for your own out directory.
 #   Name the project in the 'PROJECT' field on line 43
 #       This should look lke:
@@ -37,7 +37,7 @@ module load parallel
 SAMPLE_INFO=
 
 #   Full path to out directory
-OUT=
+SCRATCH=
 
 #   Project name
 PROJECT=
@@ -46,6 +46,7 @@ PROJECT=
 TARGET=
 
 #   Make the out directory
+OUT=${SCRATCH}/${PROJECT}/Read_Depths
 mkdir -p ${OUT}
 
 #   Define a function to unzip the FastQC report files, extract

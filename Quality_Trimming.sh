@@ -1,7 +1,7 @@
 #!/bin/env bash
 
-#PBS -l mem=1gb,nodes=1:ppn=8,walltime=20:00:00 
-#PBS -m abe 
+#PBS -l mem=1gb,nodes=1:ppn=8,walltime=20:00:00
+#PBS -m abe
 #PBS -M user@example.com
 #PBS -q lab
 
@@ -21,7 +21,7 @@ module load parallel
 #   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 59
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
-#   Specify the forward and reverse file extensions in the 'FORWARD_NAMING' 
+#   Specify the forward and reverse file extensions in the 'FORWARD_NAMING'
 #       and 'REVERSE_NAMING' fields on lines 65 and 66
 #       This should look like:
 #           FORWARD_NAMING=_1_sequence.txt.gz
@@ -29,9 +29,9 @@ module load parallel
 #   Name the project in the 'PROJECT' field on line 69
 #       This should look lke:
 #           PROJECT=Genetics
-#   Put the full directory path for the output in the 'OUTDIR' field on line 72
+#   Put the full directory path for the output in the 'SCRATCH' field on line 72
 #       This should look like:
-#           OUTDIR="${HOME}/Out_Directory"
+#           SCRATCH="${HOME}/Out_Directory"
 #       Adjust for your own out directory.
 #   Specify the directory where samples are stored in the 'WORKING' field on line 75
 #       This should look like:
@@ -43,7 +43,7 @@ module load parallel
 #       as well as a plots directory
 #   In the plots directory, there are PDFs showing graphs of the quality before and after the trim
 #   Finally, this script outputs a list of all trimmed FastQ files for use in the Read_Mapping.sh script
-#       This is stored in ${OUTDIR}/${PROJECT}, whatever you happen to name these fields. 
+#       This is stored in ${SCRATCH}/${PROJECT}/Quality_Trimming, whatever you happen to name these fields.
 
 
 #   The trimming script runs seqqs, scythe, and sickle
@@ -69,7 +69,7 @@ REVERSE_NAMING=
 PROJECT=
 
 #   Output directory
-OUTDIR=
+SCRATCH=
 
 #   Directory where samples are stored
 WORKING=
@@ -88,20 +88,21 @@ else
 fi
 
 #   Create lists of forward and reverse samples
-mkdir -p ${OUTDIR}
-grep -E "$FORWARD_NAMING" $SAMPLE_INFO > ${OUTDIR}/forward.txt
-FORWARD_SAMPLES=${OUTDIR}/forward.txt
-grep -E "$REVERSE_NAMING" $SAMPLE_INFO > ${OUTDIR}/reverse.txt
-REVERSE_SAMPLES=${OUTDIR}/reverse.txt
+OUT=${SCRATCH}/${PROJECT}/Quality_Trimming
+mkdir -p ${OUT}
+grep -E "$FORWARD_NAMING" $SAMPLE_INFO > ${OUT}/forward.txt
+FORWARD_SAMPLES=${OUT}/forward.txt
+grep -E "$REVERSE_NAMING" $SAMPLE_INFO > ${OUT}/reverse.txt
+REVERSE_SAMPLES=${OUT}/reverse.txt
 
 #   Create a list of sample names
 for i in `seq $(wc -l < $FORWARD_SAMPLES)`
 do
     s=`head -"$i" "$FORWARD_SAMPLES" | tail -1`
-    basename $s $FORWARD_NAMING >> ${OUTDIR}/samples.txt
+    basename "$s" "$FORWARD_NAMING" >> "${OUT}"/samples.txt
 done
 
-SAMPLE_NAMES=${OUTDIR}/samples.txt
+SAMPLE_NAMES=${OUT}/samples.txt
 
 
 #   Change to program directory
@@ -110,9 +111,9 @@ cd ${SEQQS_DIR}/wrappers/
 
 
 #   Run the job in parallel
-parallel --xapply ${TRIM_SCRIPT} {1} {2} {3} ${OUTDIR}/${PROJECT}/{4} :::: $SAMPLE_NAMES :::: $FORWARD_SAMPLES :::: $REVERSE_SAMPLES :::: $SAMPLE_NAMES
+parallel --xapply ${TRIM_SCRIPT} {1} {2} {3} ${OUT}/{4} :::: $SAMPLE_NAMES :::: $FORWARD_SAMPLES :::: $REVERSE_SAMPLES :::: $SAMPLE_NAMES
 
 #   Create a list of outfiles to be used by read_mapping_start.sh
-find ${OUTDIR}/${PROJECT} -regex ".*_R[1-2]_trimmed.fq.gz" | sort > ${OUTDIR}/${PROJECT}/"${PROJECT}"_samples_trimmed.txt
+find ${OUT} -regex ".*_R[1-2]_trimmed.fq.gz" | sort > ${OUT}/"${PROJECT}"_samples_trimmed.txt
 echo "List for read_mapping_start.sh can be found at"
-echo "${OUTDIR}"/"${PROJECT}"/"${PROJECT}"_samples_trimmed.txt
+echo "${OUT}"/"${PROJECT}"_samples_trimmed.txt
