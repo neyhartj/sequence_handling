@@ -116,5 +116,6 @@ export -f dedup
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
 do
     f=`head -"$i" "${SAMPLE_INFO}" | tail -1`
-    echo "dedup $f ${PICARD_DIR} ${REF_GEN} ${OUT} ${PLATFORM} ${PROJECT}" | qsub -l mem=15gb,nodes=1:ppn=8,walltime=36:00:00 -m abe -M hoff0792@umn.edu -q lab-long
+    s=`basename "$f" .sam`
+    echo "dedup $f ${PICARD_DIR} ${REF_GEN} ${OUT} ${PLATFORM} ${PROJECT}" | qsub -l mem=12gb,nodes=1:ppn=8,walltime=36:00:00 -m abe -M hoff0792@umn.edu -q lab-long -N "$s"_SAM_Processing_Picard
 done
