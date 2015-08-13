@@ -103,7 +103,7 @@ case "$1" in
             f=`head -"$i" "$FWD_FILE" | tail -1`
             r=`head -"$i" "$REV_FILE" | tail -1`
             s=`basename "$f" "$FWD"`
-            RG="RG\tID:$s\tLB:${PROJ}_$s\tPL:${PLAT}\tPU:$s\tSM:$s"
+            RG="@RG\tID:$s\tLB:${PROJ}_$s\tPL:${PLAT}\tPU:$s\tSM:$s"
             echo "module load bwa && bwa mem -R `echo -e $RG` ${SETTINGS} ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" #| qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Read_Mapping
         done
         ;;
