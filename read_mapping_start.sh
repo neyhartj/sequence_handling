@@ -104,10 +104,10 @@ case "$1" in
             r=`head -"$i" "$REV_FILE" | tail -1`
             s=`basename "$f" "$FWD"`
             RG="@RG\tID:$s\tLB:${PROJ}_$s\tPL:${PLAT}\tPU:$s\tSM:$s"
-            echo "'" > RG.txt
-            echo -e "$RG" >> RG.txt
+            echo -e "'"$RG"'" > RG.txt
+            #echo -e "$RG" >> RG.txt
             echo "'" >> RG.txt
-            cat RG.txt
+            #cat RG.txt
             #echo "module load bwa && bwa mem ${SETTINGS} -R `echo -e $RG` ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Read_Mapping
         done
         ;;
