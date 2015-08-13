@@ -17,6 +17,10 @@ where:  scratch is the output directory for the read mapping \n\
 \n\
         sample_info is the list of FASTQ files to be read mapped \n\
 \n\
+        project is the name of the project or capture facility \n\
+\n\
+        platform is the sequencing platform used for your samples \n\
+\n\
         email is the email address at which you can be notified of the progress of the read mapping \n\
 \n\
 This uses the Burrows-Wheeler Aligner's (BWA) 'mem' algorithim with the following settings: \n\
