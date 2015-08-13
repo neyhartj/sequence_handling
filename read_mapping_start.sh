@@ -10,7 +10,7 @@ set -o pipefail
 
 usage() {
     echo -e "\
-Usage: ./read_mapping_start.sh map scratch ref_gen sample_info email
+Usage: ./read_mapping_start.sh map scratch ref_gen sample_info project platform email
 where:  scratch is the output directory for the read mapping \n\
 \n\
         ref_gen is the reference genome for the read mapping \n\
@@ -64,14 +64,16 @@ QUE_SETTINGS='-l mem=8gb,nodes=1:ppn=8,walltime=16:00:00'
 case "$1" in
     "map" )
         #   Make sure there are enough arguments
-        if [ "$#" -lt 5 ]; then
+        if [ "$#" -lt 7 ]; then
             usage;
         fi
         #   Assign variables for running BWA mem
         SCRATCH="$2"
         REF_GEN="$3"
         SAMPLE_INFO="$4"
-        EMAIL="$5"
+        PROJ="$5"
+        PLAT="$6"
+        EMAIL="$7"
         #   BWA mem settings
         SETTINGS='-t 8 -k 10 -r 1.0 -M -T 85 -O 8 -E 1'
         #   Today's date
@@ -97,8 +99,10 @@ case "$1" in
             f=`head -"$i" "$FWD_FILE" | tail -1`
             r=`head -"$i" "$REV_FILE" | tail -1`
             s=`basename "$f" "$FWD"`
-            echo "module load bwa && bwa mem ${SETTINGS} ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Read_Mapping
+            RG="RG\tID:$s\tLB:${PROJ}_$s\tPL:${PLAT}\tPU:$s\tSM:$s"
+            echo "module load bwa && bwa mem -R `echo -e $RG` ${SETTINGS} ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Read_Mapping
         done
+        ID PL, PU, SM, LB
         ;;
     "index" )
         #   Make sure there are enough arguments
