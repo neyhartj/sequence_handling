@@ -83,14 +83,14 @@ case "$1" in
         #   Today's date
         YMD=`date +%Y-%m-%d`
         #   Create scratch directory if it doesn't exist
-        mkdir -p ${SCRATCH}
+        mkdir -p "${SCRATCH}"
         #   Generate lists of forward and reverse reads that match
         FWD="_R1_trimmed.fq.gz"
         REV="_R2_trimmed.fq.gz"
-        grep -E "$FWD" ${SAMPLE_INFO} | sort > ${SCRATCH}/fwd.txt
-        FWD_FILE=${SCRATCH}/fwd.txt
-        grep -E "$REV" ${SAMPLE_INFO} | sort > ${SCRATCH}/rev.txt
-        REV_FILE=${SCRATCH}/rev.txt
+        grep -E "$FWD" "${SAMPLE_INFO}" | sort > "${SCRATCH}"/fwd.txt
+        FWD_FILE="${SCRATCH}"/fwd.txt
+        grep -E "$REV" "${SAMPLE_INFO}" | sort > "${SCRATCH}"/rev.txt
+        REV_FILE="${SCRATCH}"/rev.txt
         #   Check for equal numbers of forward and reverse reads
         if [ `wc -l < "$FWD_FILE"` = `wc -l < "$REV_FILE"` ]; then
             echo "Equal numbers of forwad and reverse reads"
@@ -98,13 +98,17 @@ case "$1" in
             exit 1
         fi
         #   Start a series of QSub submissions to run BWA
-        for i in `seq $(wc -l < $FWD_FILE)`
+        for i in `seq $(wc -l < "$FWD_FILE")`
         do
             f=`head -"$i" "$FWD_FILE" | tail -1`
             r=`head -"$i" "$REV_FILE" | tail -1`
             s=`basename "$f" "$FWD"`
             RG="@RG\tID:$s\tLB:${PROJ}_$s\tPL:${PLAT}\tPU:$s\tSM:$s"
-            echo "module load bwa && bwa mem ${SETTINGS} -R `echo -e $RG` ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Read_Mapping
+            echo "'" > RG.txt
+            echo -e "$RG" >> RG.txt
+            echo "'" >> RG.txt
+            cat RG.txt
+            #echo "module load bwa && bwa mem ${SETTINGS} -R `echo -e $RG` ${REF_GEN} ${f} ${r} > ${SCRATCH}/${s}_${YMD}.sam" | qsub "${QUE_SETTINGS}" -m abe -M "${EMAIL}" -N "$s"_Read_Mapping
         done
         ;;
     "index" )
