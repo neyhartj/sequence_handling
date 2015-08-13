@@ -33,9 +33,6 @@ module load parallel
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
 #       Adjust for your own out directory.
-#   Specify the directory where samples are stored in the 'WORKING' field on line 75
-#       This should look like:
-#           WORKING=${HOME}/Working_Directory
 #   Run this script using the qsub command
 #       qsub Quality_Trimming.sh
 #   This script outputs gzipped FastQ files with the extension fq.qz
@@ -70,9 +67,6 @@ PROJECT=
 
 #   Output directory
 SCRATCH=
-
-#   Directory where samples are stored
-WORKING=
 
 #   Load the R Module
 module load R

@@ -46,7 +46,7 @@ PROJECT=
 TARGET=
 
 #   Make the out directory
-OUT=${SCRATCH}/${PROJECT}/Read_Depths
+OUT=${SCRATCH}/${PROJECT}
 mkdir -p ${OUT}
 
 #   Define a function to unzip the FastQC report files, extract
