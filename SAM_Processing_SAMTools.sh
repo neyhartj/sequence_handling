@@ -90,14 +90,14 @@ function process_sam() {
     SAMFILE="$1"
     REF_SEQ="$2"
     OUTDIR="$3"
+    #   Sample name, taken from full name of SAM file
+    SAMPLE_NAME=`basename "${SAMFILE}" .sam`
     #   Remove unnecessary information from @PG line
     #   Could use sed's in-place option, but that fails on some systems
     #   This method bypasses that
-    sed 's/-R.*$//' "${SAMFILE}" > "${SAMFILE}"_FixedHeader.sam
-    #   Sample name, taken from full name of SAM file
-    SAMPLE_NAME=`basename "${SAMFILE}" .sam`
+    sed 's/-R.*$//' "${SAMFILE}" > "${OUT}"/fixed_header/"${SAMPLE_NAME}"_FixedHeader.sam
     #   Generate a sorted BAM file
-    samtools view -bTS "${REF_GEN}" "${SAMFILE}"_FixedHeader.sam > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
+    samtools view -bTS "${REF_GEN}" "${OUT}"/fixed_header/"${SAMPLE_NAME}"_FixedHeader.sam > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
     #   Create alignment statistics for the raw BAM file
     samtools flagstat "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
     #   Sort the raw BAM file
