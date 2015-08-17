@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -l mem=8gb,nodes=1:ppn=8,walltime=16:00:00
+#PBS -l mem=12gb,nodes=1:ppn=8,walltime=24:00:00
 #PBS -m abe
 #PBS -M user@example.com
 #PBS -q lab
@@ -57,8 +57,17 @@ SCRATCH=
 PROJECT=
 
 #   Make the outdirectories
-OUT=${SCRATCH}/${PROJECT}
-mkdir -p ${OUT}/stats ${OUT}/deduped ${OUT}/sorted ${OUT}/finished ${OUT}/raw
+OUT=${SCRATCH}/${PROJECT}/SAM_Processing
+mkdir -p ${OUT}/stats ${OUT}/deduped ${OUT}/sorted ${OUT}/raw ${OUT}/fixed_header
+
+#   Check to see if SAMTools is installed
+if `command -v samtools > /dev/null 2> /dev/null`
+then
+    echo "SAMTools is installed"
+else
+    echo "Please install SAMTools and place in your path"
+    exit 1
+fi
 
 #   Generate a list of sample names
 for i in `seq $(wc -l < "${SAMPLE_INFO}")`
@@ -81,18 +90,22 @@ function process_sam() {
     SAMFILE="$1"
     REF_SEQ="$2"
     OUTDIR="$3"
+    #   Remove unnecessary information from @PG line
+    #   Could use sed's in-place option, but that fails on some systems
+    #   This method bypasses that
+    sed 's/-R.*$//' "${SAMFILE}" > "${SAMFILE}"_FixedHeader.sam
     #   Sample name, taken from full name of SAM file
     SAMPLE_NAME=`basename "${SAMFILE}" .sam`
     #   Generate a sorted BAM file
-    samtools view -bT "${REF_GEN}" "${SAMFILE}" > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
+    samtools view -bTS "${REF_GEN}" "${SAMFILE}"_FixedHeader.sam > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
     #   Create alignment statistics for the raw BAM file
     samtools flagstat "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
     #   Sort the raw BAM file
     samtools sort "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted"
     #   Deduplicate the sorted BAM file
-    samtools rmdup "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam" "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam"
+    samtools rmdup "${OUTDIR}/sorted/${SAMPLE_NAME}_${YMD}_sorted.bam" "${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_deduped.bam"
     #   Create alignment statistics using SAMTools
-    samtools flagstat "${OUTDIR}/finished/${SAMPLE_NAME}_${YMD}_finished.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_finished_stats.out"
+    samtools flagstat "${OUTDIR}/deduped/${SAMPLE_NAME}_${YMD}_deduped.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_deduped_stats.out"
 }
 
 #   Export the SAM file processing function to be used by GNU Parallel
@@ -101,7 +114,13 @@ export -f process_sam
 #   Run the SAM file processing function in parallel for all input SAM files
 cat ${SAMPLE_INFO} | parallel "process_sam {} ${REF_GEN} ${OUT}"
 
-#   Create a list of finished BAM files
-find ${OUT}/finished -name "*_finished.bam" | sort > ${OUT}/${PROJECT}_finished_BAM_files.txt
+#   Add read groups and merge the BAM files
+samtools merge -r ${OUT}/${PROJECT}_Merged.bam `find "${OUT}"/deduped -name "*_deduped.bam"`
+
+#   Create a list of deduped BAM files
+find ${OUT}/deduped -name "*_deduped.bam" | sort > ${OUT}/${PROJECT}_finished_BAM_files.txt
 echo "List of BAM files can be found at"
 echo "${OUT}/${PROJECT}_finished_BAM_files.txt"
+echo
+echo "Merged BAM file can be found at"
+echo "${OUT}/${PROJECT}_Merged.bam"
