@@ -97,7 +97,7 @@ function process_sam() {
     #   This method bypasses that
     sed 's/-R.*$//' "${SAMFILE}" > "${OUTDIR}"/fixed_header/"${SAMPLE_NAME}"_FixedHeader.sam
     #   Generate a sorted BAM file
-    samtools view -bhTS "${REF_SEQ}" "${OUTDIR}"/fixed_header/"${SAMPLE_NAME}"_FixedHeader.sam > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
+    samtools view -bhT "${REF_SEQ}" "${OUTDIR}"/fixed_header/"${SAMPLE_NAME}"_FixedHeader.sam > "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam"
     #   Create alignment statistics for the raw BAM file
     samtools flagstat "${OUTDIR}/raw/${SAMPLE_NAME}_${YMD}_raw.bam" > "${OUTDIR}/stats/${SAMPLE_NAME}_${YMD}_raw_stats.out"
     #   Sort the raw BAM file
