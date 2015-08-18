@@ -116,8 +116,6 @@ The `Read_Depths.sh` script depends on the [_Portable Batch System_](http://www.
 
 The `Quality_Trimming.sh` script runs `trim_autoplot.sh` (part of the [_Seqqs_](https://github.com/morrelllab.seqqs) repository on GitHub) on a series of samples organized in a project directory.. In addition to requiring _Seqqs_ to be installed, this also requires [GNU Parallel](http://www.gnu.org/software/parallel/) to be installed on the system.
 
-**NOTE: A list of trimmed FastQ files is _SOMETIMES_ output by this script. If the did not output a list of samples, change to your out directory and run ``find `pwd` -regex ".*_R[1-2]_trimmed.fq.gz" | sort > samples_trimmed.txt`` to get the list. To see if it did, read the output messages to see if and where the list might be. Work is being done to output a list consistently**
-
 ##### dependencies
 
 The `Quality_Trimming.sh` script depends on [_Sickle_](https://github.com/vsbuffalo/sickle), [_Scythe_](https://github.com/vsbuffalo/scythe), [_Seqqs_](https://github.com/morrelllab.seqqs), [_R_](http://cran.r-project.org/), the [_Portable Batch System_](http://www.pbsworks.com/), and [_GNU Parallel_](http://www.gnu.org/software/parallel/) to run.
@@ -175,12 +173,13 @@ ___
 ## TODO
 
  - ~~Generalize `read_counts.sh` for any project.~~ DONE!
- - Add better list-out methods
+ - ~~Add better list-out methods~~ DONE!
  - ~~Fix memory issues with `Read_Mapping.sh`~~ ~~Redesign read mapping scripts~~ DONE!
  - ~~Add coverage map script to workflow~~ ~~Finish integrating `Coverage_Map.sh` with the rest of the pipeline~~ DONE!
- - Get `Plot_Coverage.sh` and `plot_cov.R` integrated into the pipeline
+ - ~~Get `Plot_Coverage.sh` and `plot_cov.R` integrated into the pipeline~~ DONE!
  - ~~Add information about `plot_cov.R` to the README~~ DONE!
  - ~~Add script to easily convert SAM files from `Read_Mapping.sh` to BAM files for `Coverage_Map.sh`~~ ~~DONE!~~ ~~ish...~~ DONE!
  - ~~Add Deduplication script~~ Get ~~`Deduplication.sh`~~ `SAM_Processing_Picard.sh` working
  - ~~Add read mapping statistics via `samtools flagstat`~~ DONE! This is integrated into `SAM_Processing_SAMTools.sh`
+ - Incorporate variant calling scripts into the pipeline
  - keep README updated
