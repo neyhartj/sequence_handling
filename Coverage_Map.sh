@@ -76,7 +76,7 @@ SAMPLES="${OUT}"/sample_names.txt
 
 #   Do the work here
 cd ${OUT}
-parallel --xapply "bedtools coverage -hist -abam {1} -b ${REF_ANN} > ${OUT}/Sample_{2}_${PROJECT}_${DATE}.coverage.hist.txt" :::: ${SAMPLE_INFO} :::: ${SAMPLES}
+parallel --jobs 2 --xapply "bedtools coverage -hist -abam {1} -b ${REF_ANN} > ${OUT}/Sample_{2}_${PROJECT}_${DATE}.coverage.hist.txt" :::: ${SAMPLE_INFO} :::: ${SAMPLES}
 
 #   Make an output list for use with
 find ${OUT} -name "*.coverage.hist.txt" | sort > ${OUT}/${PROJECT}_samples_coverage.txt
