@@ -45,6 +45,12 @@ SCRATCH=
 SEQ_HANDLING_DIR=
 PLOT_COV=${SEQ_HANDLING_DIR}/plot_cov.R
 
+#	Path to R installation
+#		If on MSI's systems, leave as is
+module load R
+#R_DIR=
+#export PATH=$PATH:${R_DIR}
+
 #   Other variables, don't need to be user-specified
 DATE=`date +%Y-%m-%d`
 OUT=${SCRATCH}/${PROJECT}/Plot_Coverage
