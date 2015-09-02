@@ -96,11 +96,12 @@ case "$1" in
         SCYTHE_DIR=`pwd`
         echo export PATH='$PATH':"${SCYTHE_DIR}" >> "${HOME}"/.bash_profile
         cd "${ROOT}"
-        source "${HOME}"/.bash_profile
         echo "Seqqs directory is ${SEQQS_DIR}"
         sleep 2
         echo 'This needs to be written in "QSub_trim_autoplot.sh"'
         sleep 3
+        echo "To finish installing, please run the following command:"
+        echo "source ~/.bash_profile"
         ;;
     "bioawk" )
         #   Create a software directory in the home directory
@@ -128,7 +129,8 @@ case "$1" in
             echo export PATH='$PATH':"${BIOAWK_DIR}" >> "${HOME}"/.bash_profile
         fi
         cd "${ROOT}"
-        source "${HOME}"/.bash_profile
+        echo "To finish installing, please run the following command:"
+        echo "source ~/.bash_profile"
         ;;
     "samtools" )
         #   Create a software directory in the home directory
@@ -165,7 +167,8 @@ case "$1" in
             echo export PATH='$PATH':"${SAMTOOLS_DIR}" >> "${HOME}"/.bash_profile
         fi
         cd "${ROOT}"
-        source "${HOME}"/.bash_profile
+        echo "To finish installing, please run the following command:"
+        echo "source ~/.bash_profile"
         ;;
     "R" )
         #   Create a software directory in the home directory
@@ -181,7 +184,7 @@ case "$1" in
         fi
         #   Check to see if R is already installed
         if `command -v Rscript > /dev/null 2> /dev/null`
-        then 
+        then
             echo "R is installed"
         else
             #   If no R, check to see if wget is installed
@@ -205,7 +208,8 @@ case "$1" in
             fi
         fi
         cd "${ROOT}"
-        source "${HOME}"/.bash_profile
+        echo "To finish installing, please run the following command:"
+        echo "source ~/.bash_profile"
         ;;
     * )
         usage
