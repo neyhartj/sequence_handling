@@ -51,17 +51,15 @@ module load fastqc
 #export PATH=$PATH:${FASTQC_DIR}
 
 #   Check to see if FastQC was loaded or defined properly
-if `command -v fastqc`
+if ! `command -v fastqc > /dev/null 2> /dev/null`
 then
-    echo "FastQC is installed"
-else
     echo "Please make sure FastQC is either loaded or installed properly"
     exit 1
 fi
 
 #   Run FastQC in parallel
 mkdir -p ${OUT}
-cat ${SAMPLE_INFO} | parallel "fastqc {} -o ${OUT}"
+cat ${SAMPLE_INFO} | parallel "fastqc --outdir ${OUT} {}"
 
 # Create a list of ZIP files for use in counting read depth
 find ${OUT} -name "*.zip" | sort > ${OUT}/FastQC_zipfiles.txt
