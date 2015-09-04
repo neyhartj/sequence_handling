@@ -122,7 +122,7 @@ The `Quality_Trimming.sh` script depends on [_Sickle_](https://github.com/vsbuff
 
 ### SAM\_Processing\_SAMTools.sh
 
-The `SAM_Processing_SAMTools.sh` script converts the SAM files from read mapping with [BWA](http://bio-bwa.sourceforge.net/) to the BAM format using [SAMTools](http://www.htslib.org/). In the conversion process, it will sort and deduplicate the data for the finished BAM file, also using [SAMTools](http://www.htslib.org/). Alignment statistics will also be generated for both raw and finished BAM files. A list of finished BAM files will be generated at the end of this script.
+The `SAM_Processing_SAMTools.sh` script converts the SAM files from read mapping with [BWA](http://bio-bwa.sourceforge.net/) to the BAM format using [_SAMTools_](http://www.htslib.org/). In the conversion process, it will sort and deduplicate the data for the finished BAM file, also using [_SAMTools_](http://www.htslib.org/). Alignment statistics will also be generated for both raw and finished BAM files. A list of finished BAM files will be generated at the end of this script.
 
 ##### dependencies
 
@@ -130,7 +130,7 @@ The `SAM_Processing_SAMTools.sh` script depends on [_SAMTools_](http://www.htsli
 
 ### SAM\_Processing\_Picard.sh
 
-The `SAM_Processing_Picard.sh` script converts the SAM files from read mapping with [BWA](http://bio-bwa.sourceforge.net/) to the BAM format using [_Samtools_](http://www.htslib.org/). In the conversion process, it will sort and deduplicate the data for the finished BAM file, using [_Picard_](http://broadinstitute.github.io/picard/). Alignment statistics will also be generated for both raw and finished BAM files. A list of finished BAM files will be generated at the end of this script.
+The `SAM_Processing_Picard.sh` script converts the SAM files from read mapping with [BWA](http://bio-bwa.sourceforge.net/) to the BAM format using [_SAMTools_](http://www.htslib.org/). In the conversion process, it will sort and deduplicate the data for the finished BAM file, using [_Picard_](http://broadinstitute.github.io/picard/). Alignment statistics will also be generated for both raw and finished BAM files. A list of finished BAM files will be generated at the end of this script.
 
 **NOTE: This script is extremely resource intensive, please use with caution.**
 
