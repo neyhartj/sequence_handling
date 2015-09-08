@@ -49,7 +49,7 @@ SCRATCH=
 
 #   Directory for sequence handling, needed to call the R script
 SEQ_HANDLING_DIR=
-PLOT_COV=${SEQ_HANDLING_DIR}/plot_cov.R
+PLOT_COV=${SEQ_HANDLING_DIR}/Helper_Scripts/plot_cov.R
 
 #	Path to R installation
 #		If on MSI's systems, leave as is
