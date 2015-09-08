@@ -38,9 +38,6 @@ module load parallel
 #       qsub Plot_Coverage.sh
 #   This script outputs three plots in PDF format for each sample
 
-#   Where is the Sequence Handling directory located? We're using some scripts located in here
-SEQUENCE_HANDLING=
-
 #   List of text files for plotting
 SAMPLE_INFO=
 
@@ -52,7 +49,7 @@ SCRATCH=
 
 #   Directory for sequence handling, needed to call the R script
 SEQ_HANDLING_DIR=
-PLOT_COV=${SEQ_HANDLING_DIR}/Helper_Scripts/plot_cov.R
+PLOT_COV=${SEQ_HANDLING_DIR}/plot_cov.R
 
 #	Path to R installation
 #		If on MSI's systems, leave as is
