@@ -14,7 +14,7 @@ module load parallel
 #   This script is a QSub submission for quality trimming a batch of files.
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
-#   Place the full directory path to the Sequence Handling directory on line66
+#   Place the full directory path to the Sequence Handling directory on line 66
 #       This should look like:
 #           SEQUENCE_HANLDING=${HOME}/sequence_handling
 #       Use ${HOME}, as it is a link that the shell understands as your home directory
