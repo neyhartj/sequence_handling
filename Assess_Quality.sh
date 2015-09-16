@@ -17,7 +17,7 @@ module load parallel
 #   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 42
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
-#       Use ${HOME}, s shell environmental variable that returns the path to your home directory
+#       Use ${HOME}, a shell environmental variable that returns the path to your home directory
 #           and the rest is the full path to the actual list of samples
 #   Put the full directory path for the output in the 'OUT' field on line 46 with quotes around it
 #       This should look like:
