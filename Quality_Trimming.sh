@@ -14,10 +14,10 @@ module load parallel
 #   This script is a QSub submission for quality trimming a batch of files.
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
-#   Place the full directory path to your Seqqs installation on line 54
+#   Place the full path to your Seqqs installation on line 54
 #       This should look like:
 #           SEQQS_DIR=${HOME}/software/seqqs
-#       Use ${HOME}, as it is a link that the shell understands as your home directory
+#       Use ${HOME}, a shell environmental variable that returns the path to your home directory
 #   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 59
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
@@ -28,25 +28,25 @@ module load parallel
 #           REVERSE_NAMING=_2_sequence.txt.gz
 #   Name the project in the 'PROJECT' field on line 69
 #       This should look lke:
-#           PROJECT=Genetics
+#           PROJECT=Barley
 #   Put the full directory path for the output in the 'SCRATCH' field on line 72
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
-#       Adjust for your own out directory.
+#       Adjust for your own OUT directory.
 #   Run this script using the qsub command
 #       qsub Quality_Trimming.sh
 #   This script outputs gzipped FastQ files with the extension fq.qz
-#   In the stats directory, there are text files with more details about the trim
+#   In the stats directory, there are text files with more details about the trimming
 #       as well as a plots directory
 #   In the plots directory, there are PDFs showing graphs of the quality before and after the trim
 #   Finally, this script outputs a list of all trimmed FastQ files for use in the Read_Mapping.sh script
-#       This is stored in ${SCRATCH}/${PROJECT}/Quality_Trimming, whatever you happen to name these fields.
+#       This is stored in ${SCRATCH}/${PROJECT}/Quality_Trimming, with the path dependent on how you name these fields.
 
 
 #   The trimming script runs seqqs, scythe, and sickle
 #   The script is heavily modified from a Vince Buffalo original
-#   Most important modification is the addition of plotting of read data before &
-#   after. Leave the value for TRIM_SCRIPT as is unless you are not using seqqs,
+#   The most important modification is the addition of plotting of read data before &
+#   after trimming. Leave the value for TRIM_SCRIPT as is unless you are not using seqqs,
 #   sickle, and scythe for quality trimming
 SEQQS_DIR=
 TRIM_SCRIPT=${SEQQS_DIR}/wrappers/trim_autoplot.sh
