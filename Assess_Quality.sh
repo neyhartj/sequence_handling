@@ -14,18 +14,29 @@ module load parallel
 #   This script is a QSub submission for running FastQC on a batch of files.
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
-#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 42
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 45
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #       Use ${HOME}, a shell environmental variable that returns the path to your home directory
 #           and the rest is the full path to the actual list of samples
-#   Put the full directory path for the output in the 'OUT' field on line 46 with quotes around it
+#   Name the project in the 'PROJECT' field on line 48
+#       This should look lke:
+#           PROJECT=Genetics
+#   Put the full directory path for the output in the 'SCRATCH' field on line 51
 #       This should look like:
+<<<<<<< HEAD
 #           OUT="${HOME}/Out_Directory"
 #       Adjust for your own OUT directory.
 #   If NOT using MSI's resources, define a path to a FastQC installation on line 50
 #       Uncomment (remove the '#' symbol) lines 50 and 51
 #       and comment (add a '#" symbol to the front of) line 49
+=======
+#           SCRATCH="${HOME}/Out_Directory"
+#       Adjust for your own out directory.
+#   If NOT using MSI's resources, define a path to a FastQC installation on line 58
+#       Uncomment (remove the '#' symbol) lines 58 and 59
+#       and comment (add a '#" symbol to the front of) line 57
+>>>>>>> 762d3e0e8f450fc0bb41202ba9b192efae2fe353
 #       This should look like
 #           #module load fastqc
 #           FASTQC_DIR=${HOME}/path_to_fastqc
@@ -41,9 +52,20 @@ module load parallel
 #   Need to hard code the file path for qsub jobs
 SAMPLE_INFO=
 
+<<<<<<< HEAD
 #   Full path to OUT directory
 #       Requires quotes around directory path
 OUT=""
+=======
+#   Name of Project
+PROJECT=
+
+#   Scratch directory for output, 'scratch' is a symlink to individual user scratch at /scratch*
+SCRATCH=
+
+#   Full path to out directory
+OUT=${SCRATCH}/${PROJECT}/Quality_Assesment
+>>>>>>> 762d3e0e8f450fc0bb41202ba9b192efae2fe353
 
 #   Load FastQC Module
 module load fastqc
@@ -51,17 +73,15 @@ module load fastqc
 #export PATH=$PATH:${FASTQC_DIR}
 
 #   Check to see if FastQC was loaded or defined properly
-if `command -v fastqc`
+if ! `command -v fastqc > /dev/null 2> /dev/null`
 then
-    echo "FastQC is installed"
-else
     echo "Please make sure FastQC is either loaded or installed properly"
     exit 1
 fi
 
 #   Run FastQC in parallel
 mkdir -p ${OUT}
-cat ${SAMPLE_INFO} | parallel "fastqc {} -o ${OUT}"
+cat ${SAMPLE_INFO} | parallel "fastqc --outdir ${OUT} {}"
 
 # Create a list of ZIP files for use in counting read depth
 find ${OUT} -name "*.zip" | sort > ${OUT}/FastQC_zipfiles.txt

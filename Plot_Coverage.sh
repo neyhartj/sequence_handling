@@ -14,20 +14,26 @@ module load parallel
 #   This script is a QSub submission script for generating plots based off coverage maps
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
-#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 36
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 42
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
-#   Name the project in the 'PROJECT' field on line 39
+#   Name the project in the 'PROJECT' field on line 45
 #       This should look lke:
 #           PROJECT=Genetics
-#   Put the full directory path for the output in the 'SCRATCH' field on line 42
+#   Put the full directory path for the output in the 'SCRATCH' field on line 48
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
 #       Adjust for your own out directory.
-#   Define the directory where the sequence_handling scripts were downloaded on line 45
+#   Define the directory where the sequence_handling scripts were downloaded on line 51
 #       This is to find the 'plot_cov.R' script for making the plots
 #       This should look like:
 #           SEQ_HANDLING_DIR=
+#   Define the R installation on line 57
+#       If using MSI, leave the definition as is to use their installation of R
+#       Otherwise, it should look like this:
+#           R=${HOME}/software/R
+#       Please be sure to comment out (put a '#' symbol in front of) the 'module load R' on line 56
+#       And to uncomment (remove the '#' symbol) from lines 57 and 58
 #   Run this script using the qsub command
 #       qsub Plot_Coverage.sh
 #   This script outputs three plots in PDF format for each sample
@@ -43,7 +49,7 @@ SCRATCH=
 
 #   Directory for sequence handling, needed to call the R script
 SEQ_HANDLING_DIR=
-PLOT_COV=${SEQ_HANDLING_DIR}/plot_cov.R
+PLOT_COV=${SEQ_HANDLING_DIR}/Helper_Scripts/plot_cov.R
 
 #	Path to R installation
 #		If on MSI's systems, leave as is
