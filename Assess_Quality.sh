@@ -17,12 +17,12 @@ module load parallel
 #   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 42
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
-#       Use ${HOME}, as it is a link that the shell understands as your home directory
+#       Use ${HOME}, shell environmental variable that returnes your home directory
 #           and the rest is the full path to the actual list of samples
 #   Put the full directory path for the output in the 'OUT' field on line 46 with quotes around it
 #       This should look like:
 #           OUT="${HOME}/Out_Directory"
-#       Adjust for your own out directory.
+#       Adjust for your own OUT directory.
 #   If NOT using MSI's resources, define a path to a FastQC installation on line 50
 #       Uncomment (remove the '#' symbol) lines 50 and 51
 #       and comment (add a '#" symbol to the front of) line 49
@@ -41,7 +41,7 @@ module load parallel
 #   Need to hard code the file path for qsub jobs
 SAMPLE_INFO=
 
-#   Full path to out directory
+#   Full path to OUT directory
 #       Requires quotes around directory path
 OUT=""
 
