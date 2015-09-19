@@ -21,7 +21,7 @@ module load parallel
 #           and the rest is the full path to the actual list of samples
 #   Name the project in the 'PROJECT' field on line 49
 #       This should look lke:
-#           PROJECT=Genetics
+#           PROJECT=Barley
 #   Put the full directory path for the output in the 'SCRATCH' field on line 52
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"

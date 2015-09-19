@@ -19,7 +19,7 @@ module load parallel
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #   Name the project in the 'PROJECT' field on line 45
 #       This should look lke:
-#           PROJECT=Genetics
+#           PROJECT=Barley
 #   Put the full directory path for the output in the 'SCRATCH' field on line 48
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
