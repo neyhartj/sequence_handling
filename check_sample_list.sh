@@ -61,14 +61,19 @@ do
     sample_names["$i"]="$sample"
 done
 
-declare -a unique_names=(`tr ' ' '\n' <<< "${sample_names[@]}" | sort -u | tr '\n' ' '`)
+oldIFS="$IFS" # Save the IFS variable
+sorted_samples=($(sort <<< "${sample_names[@]}")) # Sort the sample_names array
+IFS="$oldIFS" # Restore the IFS variable
 
-if [[ "${#sample_names[@]}" -ne "${#unique_names[@]}" ]]
+declare -a unique_names=(`tr ' ' '\n' <<< "${sorted_samples[@]}" | sort -u | tr '\n' ' '`) # Create an array of unique sample names
+
+if [[ "${#sorted_samples[@]}" -ne "${#unique_names[@]}" ]]
 then
-    echo "$(( ${#sample_names[@]} - ${#unique_names[@]} )) duplicate sample name(s) found!"
+    echo "$(( ${#sorted_samples[@]} - ${#unique_names[@]} )) duplicate sample name(s) found!"
     oldIFS="$IFS" # Save the IFS variable
     IFS=$'\n\t' # Set a new IFS variable to trick 'comm' into working with arrays
-    Differences=($( comm --nocheck-order -3 <(echo "${sample_names[@]}") <(echo "${unique_names[@]}") ) )
+    Differences=($( comm --nocheck-order -3 <(echo "${sorted_samples[@]}") <(echo "${unique_names[@]}") ) )
+    IFS="$oldIFS"
     declare -p Differences
     exit 5
 fi
