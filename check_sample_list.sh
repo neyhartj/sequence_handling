@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -u
 set -o pipefail
 
 #   Check to make sure we have our argument
@@ -29,7 +28,7 @@ SAMPLE_INFO=$1
 
 #   Check to make sure files exist
 TIME=`date +%m-%d-%y-%H.%M.%S` # Figure out what the time is so that the file with missing samples isn't one messy file
-declare -a MISSING=() # Set up an array to hold missing samples
+declare -a MISSING # Set up an array to hold missing samples
 counter=0 # Start a counter for adding to the bash array
 for sample in `cat "${SAMPLE_INFO}"`
 do
