@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -u
 set -o pipefail
 
 #   Check to make sure we have our argument
@@ -28,7 +29,7 @@ SAMPLE_INFO=$1
 
 #   Check to make sure files exist
 TIME=`date +%m-%d-%y-%H.%M.%S` # Figure out what the time is so that the file with missing samples isn't one messy file
-declare -a MISSING # Set up an array to hold missing samples
+declare -a MISSING=() # Set up an array to hold missing samples
 counter=0 # Start a counter for adding to the bash array
 for sample in `cat "${SAMPLE_INFO}"`
 do
@@ -54,7 +55,7 @@ then
 fi
 
 #   Make sure sample names are unique
-declare -a sample_names # Set up an array to hold these sample names
+declare -a sample_names=() # Set up an array to hold these sample names
 for i in `seq 0 "$(( $( wc -l < ${SAMPLE_INFO} ) - 1 ))"`
 do
     sample=`basename $( head -"$(( $i + 1 ))" "${SAMPLE_INFO}" | tail -1 )`
@@ -66,5 +67,9 @@ declare -a unique_names=(`tr ' ' '\n' <<< "${sample_names[@]}" | sort -u | tr '\
 if [[ "${#sample_names[@]}" -ne "${#unique_names[@]}" ]]
 then
     echo "$(( ${#sample_names[@]} - ${#unique_names[@]} )) duplicate sample name(s) found!"
+    oldIFS="$IFS" # Save the IFS variable
+    IFS=$'\n\t' # Set a new IFS variable to trick 'comm' into working with arrays
+    Differences=($( comm --nocheck-order -3 <(echo "${sample_names[@]}") <(echo "${unique_names[@]}") ) )
+    declare -p Differences
     exit 5
 fi
