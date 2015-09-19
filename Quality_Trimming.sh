@@ -14,19 +14,11 @@ module load parallel
 #   This script is a QSub submission for quality trimming a batch of files.
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
-<<<<<<< HEAD
-#   Place the full path to your Seqqs installation on line 54
-#       This should look like:
-#           SEQQS_DIR=${HOME}/software/seqqs
-#       Use ${HOME}, a shell environmental variable that returns the path to your home directory
-#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 59
-=======
 #   Place the full directory path to the Sequence Handling directory on line 66
 #       This should look like:
 #           SEQUENCE_HANLDING=${HOME}/sequence_handling
 #       Use ${HOME}, as it is a link that the shell understands as your home directory
 #   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 69
->>>>>>> 762d3e0e8f450fc0bb41202ba9b192efae2fe353
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
 #   Specify the forward and reverse file extensions in the 'FORWARD_NAMING'
@@ -36,25 +28,18 @@ module load parallel
 #           REVERSE_NAMING=_2_sequence.txt.gz
 #   Name the project in the 'PROJECT' field on line 79
 #       This should look lke:
-<<<<<<< HEAD
 #           PROJECT=Barley
-#   Put the full directory path for the output in the 'SCRATCH' field on line 72
-#       This should look like:
-#           SCRATCH="${HOME}/Out_Directory"
-#       Adjust for your own OUT directory.
-=======
-#           PROJECT=Genetics
 #   Put the full directory path for the output in the 'SCRATCH' field on line 82
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
-#       Adjust for your own out directory.
+#       Adjust for your own OUT directory.
 #   List the adapters file on line 85
 #       This should look like:
 #           ADAPTERS=${HOME}/adapters.fa
 #   Define the prior for Scythe on line 89
 #       This should look like:
 #           PRIOR=0.04
-#   Set Sickle's quality threshold on line 64
+#   Set Sickle's quality threshold on line 94
 #       This should look like:
 #           THRESHOLD=20
 #       Use 20 for normal trimming and 0 for no trimming
@@ -67,7 +52,6 @@ module load parallel
 #           R=${HOME}/software/R
 #       Please be sure to comment out (put a '#' symbol in front of) the 'module load R' on line 100
 #       And to uncomment (remove the '#' symbol) from lines 101 and 102
->>>>>>> 762d3e0e8f450fc0bb41202ba9b192efae2fe353
 #   Run this script using the qsub command
 #       qsub Quality_Trimming.sh
 #   This script outputs gzipped FastQ files with the extension fq.qz
@@ -78,18 +62,8 @@ module load parallel
 #       This is stored in ${SCRATCH}/${PROJECT}/Quality_Trimming, with the path dependent on how you name these fields.
 
 
-<<<<<<< HEAD
-#   The trimming script runs seqqs, scythe, and sickle
-#   The script is heavily modified from a Vince Buffalo original
-#   The most important modification is the addition of plotting of read data before &
-#   after trimming. Leave the value for TRIM_SCRIPT as is unless you are not using seqqs,
-#   sickle, and scythe for quality trimming
-SEQQS_DIR=
-TRIM_SCRIPT=${SEQQS_DIR}/wrappers/trim_autoplot.sh
-=======
 #   Where is the Sequence Handling directory located? We're using some scripts located in here
 SEQUENCE_HANDLING=
->>>>>>> 762d3e0e8f450fc0bb41202ba9b192efae2fe353
 
 #   List of samples to be processed
 SAMPLE_INFO=
