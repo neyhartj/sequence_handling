@@ -120,9 +120,8 @@ declare -a REVERSE=(`grep -E "${REVERSE_NAMING}" "${SAMPLE_INFO}"`)
 #   Create an array of sample names
 declare -a SAMPLE_NAMES
 counter=0
-for i in `seq $(wc -l < "${FORWARD_SAMPLES}")`
+for s in "${FORWARD[@]}"
 do
-    s=`head -"$i" "$FORWARD_SAMPLES" | tail -1`
     SAMPLE_NAMES[`echo "$counter"`]=`echo "basename $s ${FORWARD_NAMING}"`
     let "counter += 1"
 done
@@ -140,7 +139,7 @@ function trimAutoplot() {
     threshold="$7" #    Threshold Value
     encoding="$8" # Platform for sequencing
     seqHand="$9" #  The sequence_handling directory
-    if -d [[ "${seqHand}"/Helper_Scripts ]] #  Check to see if helper scripts directory exists
+    if [[ -d "${seqHand}"/Helper_Scripts ]] #  Check to see if helper scripts directory exists
     then
         helper="${seqHand}"/Helper_Scripts #    The directory for the helper scripts
     else
@@ -179,7 +178,7 @@ then
 fi
 
 #   Run the job in parallel
-parallel --xapply trimAutoplot {1} {2} {3} ${OUT} ${ADAPTERS} ${PRIOR} ${THRESHOLD} ${SEQUENCE_HANDLING} ::: ${SAMPLE_NAMES[@]} ::: ${FORWARD[@]} ::: ${REVERSE[@]}
+parallel --xapply trimAutoplot {1} {2} {3} ${OUT} ${ADAPTERS} ${PRIOR} ${THRESHOLD} ${PLATFORM} ${SEQUENCE_HANDLING} ::: ${SAMPLE_NAMES[@]} ::: ${FORWARD[@]} ::: ${REVERSE[@]}
 
 #   Create a list of outfiles to be used by read_mapping_start.sh
 find ${OUT} -regex ".*_R[1-2]_trimmed.fq.gz" | sort > ${OUT}/"${PROJECT}"_samples_trimmed.txt
