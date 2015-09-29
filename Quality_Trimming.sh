@@ -105,24 +105,27 @@ module load R
 FORWARD_COUNT="`grep -cE "${FORWARD_NAMING}" ${SAMPLE_INFO}`"
 REVERSE_COUNT="`grep -cE "${REVERSE_NAMING}" ${SAMPLE_INFO}`"
 
-if [ "$FORWARD_COUNT" = "$REVERSE_COUNT" ]; then
+if [[ "${FORWARD_COUNT}" -eq "${REVERSE_COUNT}" ]]
+then
     echo Equal numbers of forward and reverse samples
 else
     exit 1
 fi
 
+#   Make the out directory
 OUT=${SCRATCH}/${PROJECT}/Quality_Trimming
 mkdir -p ${OUT}
+
 #   Create arrays of forward and reverse samples
 declare -a FORWARD=(`grep -E "${FORWARD_NAMING}" "${SAMPLE_INFO}"`)
 declare -a REVERSE=(`grep -E "${REVERSE_NAMING}" "${SAMPLE_INFO}"`)
 
 #   Create an array of sample names
-declare -a SAMPLE_NAMES
+declare -a SAMPLE_NAMES=()
 counter=0
 for s in "${FORWARD[@]}"
 do
-    SAMPLE_NAMES[`echo "$counter"`]=`echo "basename $s ${FORWARD_NAMING}"`
+    SAMPLE_NAMES[`echo "$counter"`]="`basename $s ${FORWARD_NAMING}`"
     let "counter += 1"
 done
 
