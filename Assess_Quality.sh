@@ -14,21 +14,22 @@ module load parallel
 #   This script is a QSub submission for running FastQC on a batch of files.
 #   To use, on line 5, change the 'user@example.com' to your own email address
 #       to get notifications on start and completion for this script
-#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 45
+#   Add the full file path to list of samples on the 'SAMPLE_INFO' field on line 46
 #       This should look like:
 #           SAMPLE_INFO=${HOME}/Directory/list.txt
-#       Use ${HOME}, as it is a link that the shell understands as your home directory
+#       Use ${HOME}, a shell environmental variable that returns the path to your home directory
 #           and the rest is the full path to the actual list of samples
-#   Name the project in the 'PROJECT' field on line 48
+#   Name the project in the 'PROJECT' field on line 49
 #       This should look lke:
-#           PROJECT=Genetics
-#   Put the full directory path for the output in the 'SCRATCH' field on line 51
+#           PROJECT=Barley
+#   Put the full directory path for the output in the 'SCRATCH' field on line 52
 #       This should look like:
 #           SCRATCH="${HOME}/Out_Directory"
-#       Adjust for your own out directory.
-#   If NOT using MSI's resources, define a path to a FastQC installation on line 58
-#       Uncomment (remove the '#' symbol) lines 58 and 59
-#       and comment (add a '#" symbol to the front of) line 57
+#       The full OUT directory path will be ${SCRATCH}/${PROJECT}/Quality_Assesment
+#       Adjust for your own OUT directory.
+#   If NOT using MSI's resources, define a path to a FastQC installation on line 56
+#       Uncomment (remove the '#' symbol) lines 56 and 57
+#       and comment (add a '#" symbol to the front of) line 55
 #       This should look like
 #           #module load fastqc
 #           FASTQC_DIR=${HOME}/path_to_fastqc
@@ -50,9 +51,6 @@ PROJECT=
 #   Scratch directory for output, 'scratch' is a symlink to individual user scratch at /scratch*
 SCRATCH=
 
-#   Full path to out directory
-OUT=${SCRATCH}/${PROJECT}/Quality_Assesment
-
 #   Load FastQC Module
 module load fastqc
 #FASTQC_DIR=
@@ -66,6 +64,7 @@ then
 fi
 
 #   Run FastQC in parallel
+OUT=${SCRATCH}/${PROJECT}/Quality_Assesment
 mkdir -p ${OUT}
 cat ${SAMPLE_INFO} | parallel "fastqc --outdir ${OUT} {}"
 

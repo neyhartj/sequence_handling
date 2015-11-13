@@ -17,8 +17,8 @@ where:  file_ext is the extenstion of samples being found \n\
                 .fq.gz \n\
                 .sam \n\
 \n\
-        reads_dir is the directory in which all samples or \n\
-            root directory for subdirectories containing samples \n\
+        reads_dir is the directory in which all samples are found or \n\
+            the root directory for subdirectories containing samples \n\
 \n\
         out_dir is the desired out directory for the list. \n\
             NOTE: this should NOT be the same as reads_dir \n\
@@ -32,7 +32,7 @@ if [ "$#" -lt 4 ]; then
     usage;
 fi
 
-#   File extenstion of samples
+#   File extension of samples
 #       Example:
 #           .fastq.gz
 #           .txt.gz

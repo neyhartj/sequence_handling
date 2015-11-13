@@ -28,7 +28,7 @@ module load parallel
 #       Adjust for your own out directory.
 #   Name the project in the 'PROJECT' field on line 61
 #       This should look lke:
-#           PROJECT=Genetics
+#           PROJECT=Barley
 #       The final output path will be ${SCRATCH}/${PROJECT}/SAM_Processing
 #   Define a path to the SAMTools in the 'SAMTOOLS' field on line 65
 #       If using MSI, leave the definition as is to use their installation of SAMTools

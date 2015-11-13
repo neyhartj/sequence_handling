@@ -34,7 +34,7 @@ module load parallel
 #       Adjust for your own out directory.
 #   Name the project in the 'PROJECT' field on line 57
 #       This should look lke:
-#           PROJECT=Genetics
+#           PROJECT=Barley
 #   Run this script with the qsub command
 #       qsub SAM_Processing_SAMTools.sh
 #   This script outputs sorted and deduplicated BAM files for each sample

@@ -25,7 +25,7 @@ module load parallel
 #       Adjust for your own out directory.
 #   Name the project in the 'PROJECT' field on line 44
 #       This should look lke:
-#           PROJECT=Genetics
+#           PROJECT=Barley
 #       The full output path will be ${SCRATCH}/${PROJECT}/Read_Depths
 #   Define the target size for your samples in the 'TARGET' field on line 47
 #       This should look like:

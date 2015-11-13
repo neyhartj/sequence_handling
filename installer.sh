@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -u
 set -o pipefail
 
 #   This script installs Sickle, Seqqs, and Scythe
